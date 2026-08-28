@@ -1,0 +1,12 @@
+.gradle/
+build/
+!gradle-wrapper.jar
+.gradle/
+.idea/
+.settings/
+.classpath
+.project
+target/
+*.log
+*.tmp
+*.bak

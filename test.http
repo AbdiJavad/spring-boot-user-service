@@ -1,0 +1,49 @@
+### تست اول: ساخت کاربر جدید (باید با موفقیت 201 برگرده)
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+"name": "Jovan",
+"email": "jovan@example.com"
+}
+
+
+### تست دوم: تست اعتبارسنجی (باید با خطای 400 برگرده)
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+"name": "",
+"email": "ایمیل-نادرست"
+}
+### تست حذف کاربر شماره ۱
+DELETE http://localhost:8080/users/1
+
+### تست ویرایش کاربر شماره ۱
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "Jovan Professional",
+  "email": "jovan.pro@example.com"
+}
+### ۱. ساخت کاربر
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Jovan",
+  "email": "jovan@example.com"
+}
+
+### ۲. ویرایش کاربر (فرض می‌کنیم ID کاربر ۱ هست)
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "Jovan Professional",
+  "email": "jovan.pro@example.com"
+}
+
+### ۳. چک کردنِ نتیجه نهایی
+GET http://localhost:8080/get-users
