@@ -1,5 +1,10 @@
 package com.example.demo;
 
+import com.example.demo.service.UserService;
+import com.example.demo.dto.UserRegistrationDto;
+import com.example.demo.dto.LoginRequest;
+import com.jayway.jsonpath.JsonPath;
+import org.springframework.test.web.servlet.MvcResult;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -24,6 +30,10 @@ public class SecurityIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -83,6 +93,35 @@ public class SecurityIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(duplicateUserJson))
                 .andExpect(status().isConflict());
+    }
+    @Test
+    void shouldAccessProtectedEndpointWithValidJwtToken() throws Exception {
+        // 1. Arrange: ثبت نام کاربر تستی با UserRegistrationDto
+        UserRegistrationDto registerDto = new UserRegistrationDto("Jovan Admin", "jovan.auth@example.com", "SecurePass123!");
+        userService.registerUser(registerDto);
+
+        // آماده‌سازی اطلاعات لاگین با LoginRequest
+        LoginRequest loginDto = new LoginRequest("jovan.auth@example.com", "SecurePass123!");
+
+        // 2. Act: لاگین و دریافت توکن
+        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").exists())
+                .andReturn();
+
+        // استخراج رشته توکن از خروجی لاگین
+        String responseContent = loginResult.getResponse().getContentAsString();
+        String jwtToken = JsonPath.read(responseContent, "$.token");
+
+        // 3. Act & Assert: دسترسی به /api/users/me با هدر Bearer Token
+        mockMvc.perform(get("/api/users/me")
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value("jovan.auth@example.com"))
+                .andExpect(jsonPath("$.name").value("Jovan Admin"));
     }
 
     @Test
