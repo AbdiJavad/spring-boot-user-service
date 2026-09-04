@@ -1,0 +1,9 @@
+### تست ثبت‌نام کاربر جدید
+POST http://localhost:8080/api/users/register
+Content-Type: application/json
+
+{
+  "name": "Jovan",
+  "email": "jovan@example.com",
+  "password": "MySecurePassword123!"
+}

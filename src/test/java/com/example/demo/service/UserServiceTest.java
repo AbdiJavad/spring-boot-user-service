@@ -25,19 +25,24 @@ public class UserServiceTest {
 
     @Test
     void testGetUserById_Success() {
-        // ۱. داده‌ی فیک بساز
-        User mockUser = new User("Jovan", "jovan@example.de");
+        User user = new User();
+        user.setId(1L);
+        user.setName("Jovan");
+        user.setEmail("jovan@example.com");
+        user.setPassword("encoded-password");
 
-        // ۲. Mock کردن رفتار ریپازیتوری
-        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+        when(userRepository.findById(1L))
+                .thenReturn(Optional.of(user));
 
-        // ۳. صدا زدن سرویس
         User result = userService.getUserById(1L);
 
-        // ۴. چک کردن نتیجه
         assertNotNull(result);
         assertEquals("Jovan", result.getName());
+        assertEquals("jovan@example.com", result.getEmail());
+
+        verify(userRepository).findById(1L);
     }
+
     @Test
     void testGetUserById_NotFound() {
         // ۱. به Mockito می‌گیم: وقتی آی‌دیِ 99 رو جستجو کردیم، هیچی برنگردون (Optional.empty)
