@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 // import org.springframework.security.authentication.AuthenticationProvider; // این خط را اگر AuthenticationProvider به صورت جداگانه تعریف نکردی، حذف کن.
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // <-- این حتماً باید باشد تا @PreAuthorize کار کند
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
