@@ -1,28 +1,29 @@
 package com.example.demo;
 
-import com.example.demo.service.UserService;
-import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.dto.LoginRequest;
-import com.jayway.jsonpath.JsonPath;
-import org.springframework.test.web.servlet.MvcResult;
+import com.example.demo.dto.UserRegistrationDto;
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtService;
+import com.example.demo.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,13 +31,18 @@ public class SecurityIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -74,11 +80,12 @@ public class SecurityIntegrationTest {
     @Test
     @DisplayName("ثبت‌نام با ایمیل تکراری باید با خطای 409 مواجه شود")
     void shouldFailWhenRegisteringDuplicateEmail() throws Exception {
-        // ایجاد یک کاربر اولیه در دیتابیس
-        User existingUser = new User();
-        existingUser.setName("Existing");
-        existingUser.setEmail("duplicate@example.com");
-        existingUser.setPassword(passwordEncoder.encode("Password123!"));
+        User existingUser = User.builder()
+                .name("Existing")
+                .email("duplicate@example.com")
+                .password(passwordEncoder.encode("Password123!"))
+                .role(Role.ROLE_USER)
+                .build();
         userRepository.save(existingUser);
 
         String duplicateUserJson = """
@@ -94,13 +101,14 @@ public class SecurityIntegrationTest {
                         .content(duplicateUserJson))
                 .andExpect(status().isConflict());
     }
+
     @Test
+    @DisplayName("دسترسی به اندپوینت محافظت‌شده با توکن معتبر JWT")
     void shouldAccessProtectedEndpointWithValidJwtToken() throws Exception {
-        // 1. Arrange: ثبت نام کاربر تستی با UserRegistrationDto
+        // 1. Arrange: ثبت‌نام کاربر
         UserRegistrationDto registerDto = new UserRegistrationDto("Jovan Admin", "jovan.auth@example.com", "SecurePass123!");
         userService.registerUser(registerDto);
 
-        // آماده‌سازی اطلاعات لاگین با LoginRequest
         LoginRequest loginDto = new LoginRequest("jovan.auth@example.com", "SecurePass123!");
 
         // 2. Act: لاگین و دریافت توکن
@@ -111,13 +119,12 @@ public class SecurityIntegrationTest {
                 .andExpect(jsonPath("$.token").exists())
                 .andReturn();
 
-        // استخراج رشته توکن از خروجی لاگین
         String responseContent = loginResult.getResponse().getContentAsString();
         String jwtToken = JsonPath.read(responseContent, "$.token");
 
-        // 3. Act & Assert: دسترسی به /api/users/me با هدر Bearer Token
+        // 3. Assert: دسترسی به /api/users/me
         mockMvc.perform(get("/api/users/me")
-                        .header("Authorization", "Bearer " + jwtToken)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("jovan.auth@example.com"))
@@ -125,26 +132,56 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("ورود موفقیت‌آمیز باید یک JWT Token معتبر برگرداند")
-    void shouldAuthenticateAndReturnJwt() throws Exception {
-        // ایجاد کاربر برای ورود
-        User user = new User();
-        user.setName("Login User");
-        user.setEmail("login@example.com");
-        user.setPassword(passwordEncoder.encode("SecretPass123"));
-        userRepository.save(user);
+    @DisplayName("Normal user cannot delete other users - Should return 403 Forbidden")
+    void normalUser_CannotDeleteOtherUsers_ShouldReturnForbidden() throws Exception {
+        // 1. ایجاد کاربر عادی (درخواست‌دهنده)
+        User normalUser = userRepository.save(User.builder()
+                .name("Normal User")
+                .email("normal@example.com")
+                .password(passwordEncoder.encode("Password123!"))
+                .role(Role.ROLE_USER)
+                .build());
 
-        String loginJson = """
-                {
-                    "email": "login@example.com",
-                    "password": "SecretPass123"
-                }
-                """;
+        // 2. ایجاد کاربر هدف برای حذف
+        User targetUser = userRepository.save(User.builder()
+                .name("Target User")
+                .email("target@example.com")
+                .password(passwordEncoder.encode("Password123!"))
+                .role(Role.ROLE_USER)
+                .build());
 
-        mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(loginJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token", notNullValue()));
+        String userToken = jwtService.generateToken(normalUser);
+
+        // 3. ارسال درخواست DELETE توسط کاربر عادی -> انتظار 403 Forbidden
+        mockMvc.perform(delete("/api/users/" + targetUser.getId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + userToken))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Admin user can delete other users - Should return 204 No Content")
+    void adminUser_CanDeleteOtherUsers_ShouldReturnNoContent() throws Exception {
+        // 1. ایجاد کاربر ادمین (درخواست‌دهنده)
+        User adminUser = userRepository.save(User.builder()
+                .name("Admin User")
+                .email("admin@example.com")
+                .password(passwordEncoder.encode("Password123!"))
+                .role(Role.ROLE_ADMIN)
+                .build());
+
+        // 2. ایجاد کاربر هدف برای حذف
+        User targetUser = userRepository.save(User.builder()
+                .name("Target User To Delete")
+                .email("target.delete@example.com")
+                .password(passwordEncoder.encode("Password123!"))
+                .role(Role.ROLE_USER)
+                .build());
+
+        String adminToken = jwtService.generateToken(adminUser);
+
+        // 3. ارسال درخواست DELETE توسط ادمین -> انتظار 204 No Content
+        mockMvc.perform(delete("/api/users/" + targetUser.getId())
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken))
+                .andExpect(status().isNoContent());
     }
 }
