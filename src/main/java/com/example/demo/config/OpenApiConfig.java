@@ -15,7 +15,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("User Service API")
                         .version("1.0.0")
-                        .description("Enterprise-grade User Management API compliant with RFC 7807 for error handling.")
+                        .description("Enterprise-grade User Management API compliant with RFC 7807.")
                         .contact(new Contact()
                                 .name("Jovan")
                                 .email("jovan@example.com")));
