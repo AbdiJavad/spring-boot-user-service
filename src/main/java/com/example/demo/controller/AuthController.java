@@ -2,16 +2,18 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.UserRegistrationDto;
+import com.example.demo.dto.UserResponseDto;
+import com.example.demo.model.User;
 import com.example.demo.security.JwtService;
+import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,31 +21,28 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
 
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
+        UserResponseDto createdUser = userService.createUser(registrationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            System.out.println("--> Login Versuch für Email: " + request.email());
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.email(),
+                        loginRequest.password()
+                )
+        );
 
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
-            );
+        User user = (User) authentication.getPrincipal();
+        String token = jwtService.generateToken(user);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(request.email());
-            String token = jwtService.generateToken(userDetails);
-
-            System.out.println("--> Token erfolgreich generiert!");
-            return ResponseEntity.ok(new AuthResponse(token));
-
-        } catch (BadCredentialsException ex) {
-            System.out.println("--> Fehler: Falsches Passwort oder Benutzer nicht gefunden!");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültige E-Mail oder Passwort");
-        } catch (Exception ex) {
-            System.out.println("--> Unerwarteter Fehler: " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler: " + ex.getMessage());
-        }
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail()));
     }
 }

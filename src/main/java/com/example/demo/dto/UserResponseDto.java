@@ -1,30 +1,20 @@
-package com.example.demo.dto; // یا پکیج مربوط به DTOهای شما
+package com.example.demo.dto;
 
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class UserResponseDto {
-
-    private Long id;
-    private String name;
-    private String email;
-    private Role role; // <-- فیلد نقش
-
+public record UserResponseDto(
+        Long id,
+        String name,
+        String email,
+        Role role
+) {
     public static UserResponseDto fromEntity(User user) {
-     return UserResponseDto.builder()
-                             .id(user.getId())
-                             .name(user.getName())
-                             .email(user.getEmail())
-                           .role(user.getRole())
-                            .build();
-
+        return new UserResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 }

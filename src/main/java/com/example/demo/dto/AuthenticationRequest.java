@@ -1,13 +1,14 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthenticationRequest {
-    private String email;
-    private String password;
+public record AuthenticationRequest(
+        @NotBlank(message = "E-Mail darf nicht leer sein")
+        @Email(message = "Bitte eine gültige E-Mail-Adresse eingeben")
+        String email,
+
+        @NotBlank(message = "Passwort darf nicht leer sein")
+        String password
+) {
 }
