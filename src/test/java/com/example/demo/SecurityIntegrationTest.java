@@ -105,13 +105,18 @@ public class SecurityIntegrationTest {
     @Test
     @DisplayName("دسترسی به اندپوینت محافظت‌شده با توکن معتبر JWT")
     void shouldAccessProtectedEndpointWithValidJwtToken() throws Exception {
-        // 1. Arrange: ثبت‌نام کاربر
-        UserRegistrationDto registerDto = new UserRegistrationDto("Jovan Admin", "jovan.auth@example.com", "SecurePass123!");
-        userService.registerUser(registerDto);
+        // 1. Arrange: ثبت‌نام کاربر تست با مشخصات یکپارچه
+        UserRegistrationDto registrationDto = new UserRegistrationDto(
+                "Jovan Admin",
+                "jovan.auth@example.com",
+                "SecurePass123!",
+                null
+        );
+        userService.registerUser(registrationDto); // ✅ متغیر اصلاح شد
 
         LoginRequest loginDto = new LoginRequest("jovan.auth@example.com", "SecurePass123!");
 
-        // 2. Act: لاگین و دریافت توکن
+        // 2. Act: لاگین و دریافت توکن JWT
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDto)))
@@ -122,7 +127,7 @@ public class SecurityIntegrationTest {
         String responseContent = loginResult.getResponse().getContentAsString();
         String jwtToken = JsonPath.read(responseContent, "$.token");
 
-        // 3. Assert: دسترسی به /api/users/me
+        // 3. Assert: دسترسی به اندپوینت امن /api/users/me
         mockMvc.perform(get("/api/users/me")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                         .accept(MediaType.APPLICATION_JSON))
@@ -130,6 +135,7 @@ public class SecurityIntegrationTest {
                 .andExpect(jsonPath("$.email").value("jovan.auth@example.com"))
                 .andExpect(jsonPath("$.name").value("Jovan Admin"));
     }
+
 
     @Test
     @DisplayName("Normal user cannot delete other users - Should return 403 Forbidden")

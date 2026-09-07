@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserResponseDto;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -35,7 +34,7 @@ public class UserServiceTest {
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user));
 
-        UserResponseDto result = userService.getUserById(1L);
+        User result = userService.getUserById(1L);
 
         assertNotNull(result);
         assertEquals("Jovan", result.getName());
