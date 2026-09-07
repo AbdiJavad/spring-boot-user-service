@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import com.example.demo.dto.UserDTO;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.exception.EmailAlreadyExistsException;
@@ -40,16 +39,16 @@ public class UserService {
     }
 
     public User registerUser(UserRegistrationDto registrationDto) {
-        if (userRepository.existsByEmail(registrationDto.email())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + registrationDto.email());
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            throw new EmailAlreadyExistsException("Email already exists: " + registrationDto.getEmail());
         }
 
-        Role role = registrationDto.role() != null ? registrationDto.role() : Role.ROLE_USER;
+        Role role = registrationDto.getRole() != null ? registrationDto.getRole() : Role.ROLE_USER;
 
         User user = User.builder()
-                .name(registrationDto.name())
-                .email(registrationDto.email())
-                .password(passwordEncoder.encode(registrationDto.password()))
+                .name(registrationDto.getName())
+                .email(registrationDto.getEmail())
+                .password(passwordEncoder.encode(registrationDto.getPassword()))
                 .role(role)
                 .build();
 
