@@ -2,48 +2,61 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.UserRegistrationDto;
-import com.example.demo.dto.UserResponseDto;
+import com.example.demo.dto.RefreshTokenRequest;   // ⬅️ این سطر را اضافه کن
+import com.example.demo.dto.TokenResponse;
 import com.example.demo.model.User;
 import com.example.demo.security.JwtService;
-import com.example.demo.service.UserService;
-import jakarta.validation.Valid;
+import com.example.demo.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
-
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
-        User registeredUser = userService.registerUser(registrationDto);
-        UserResponseDto response = UserResponseDto.fromEntity(registeredUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.email(),
-                        loginRequest.password()
-                )
-        );
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
+            );
+            var userDetails = userDetailsService.loadUserByUsername(request.email());
+            var user = (User) userDetails;
+            var accessToken = jwtService.generateToken(user);
+            var refreshToken = refreshTokenService.createRefreshToken(user);
+            return ResponseEntity.ok(AuthResponse.of(accessToken, refreshToken.getToken()));
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Ungültige E-Mail oder Passwort");
+        } catch (Exception e) {
+            throw new IllegalStateException("Unerwarteter Fehler beim Login", e);
+        }
+    }
 
-        User user = (User) authentication.getPrincipal();
-        String token = jwtService.generateToken(user);
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        var newRefreshToken = refreshTokenService.rotate(request.refreshToken());
+        var user = newRefreshToken.getUser();
+        var accessToken = jwtService.generateToken(user);
+        return ResponseEntity.ok(TokenResponse.of(accessToken, newRefreshToken.getToken(), 3600L));
+    }
 
-        return ResponseEntity.ok(new AuthResponse(token, user.getEmail()));
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody RefreshTokenRequest request) {
+        refreshTokenService.revoke(request.refreshToken());
+        return ResponseEntity.noContent().build();
     }
 }

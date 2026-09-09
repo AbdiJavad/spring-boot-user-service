@@ -1,14 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.model.RefreshToken;
-import com.example.demo.model.User; // User را import کنید
+import com.example.demo.model.User;
 import com.example.demo.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Optional;
+import java.util.Base64;
 import java.util.UUID;
 
 @Service
@@ -16,40 +17,74 @@ import java.util.UUID;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    // private final UserRepository userRepository; // فعلاً این را کامنت می‌کنیم چون User هنوز کامل نیست
+
+    @Value("${app.security.refresh-token-validity-seconds:604800}")
+    private long refreshTokenValiditySeconds;
 
     /**
-     * ایجاد یک Refresh Token جدید برای یک کاربر مشخص
-     * @param user آبجکت User که توکن برای او ایجاد می‌شود
-     * @return آبجکت RefreshToken ساخته شده
+     * یک توکن جدید با مقدار ۲۵۶ بیتی (base64url) می‌سازد
+     * و رابط آن را با کاربر ثبت می‌کند.
      */
     @Transactional
-    public RefreshToken createRefreshToken(User user) { // پارامتر ورودی را به User تغییر دادیم
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null for creating a refresh token.");
-        }
-
+    public RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = RefreshToken.builder()
-                .token(UUID.randomUUID().toString())
-                .user(user) // حالا User را به توکن اختصاص می‌دهیم
-                .expiryDate(Instant.now().plusSeconds(604800)) // ۷ روز اعتبار (604800 ثانیه)
+                .token(generateSecureToken())
+                .expiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds))
+                .revoked(false)
+                .user(user)
                 .build();
-
         return refreshTokenRepository.save(refreshToken);
     }
 
     /**
-     * پیدا کردن توکن بر اساس رشته توکن
+     * بررسی می‌کند که توکن:
+     *  ۱) در پایگاه‌داده وجود داشته باشد
+     *  ۲) هنوز باطل نشده (revoked = false)
+     *  ۳) منقضی نشده باشد
+     *  در صورت موفقی، Reference Object را برمی‌گرداند.
      */
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenRepository.findByToken(token);
+    @Transactional(readOnly = true)
+    public RefreshToken validateRefreshToken(String token) {
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+        if (refreshToken.isRevoked()) {
+            throw new IllegalArgumentException("Refresh token has been revoked");
+        }
+        if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
+            throw new IllegalArgumentException("Refresh token has expired");
+        }
+        return refreshToken;
     }
 
     /**
-     * حذف توکن (مثلاً در هنگام Logout)
+     * Rotation: توکن ورودی باطل می‌شود (logical delete)
+     * و یک توکن جدید پشتیبانی‌شده برای همان کاربر ساخته قرار می‌گیرد.
      */
     @Transactional
-    public void deleteByToken(String token) {
-        refreshTokenRepository.findByToken(token).ifPresent(refreshTokenRepository::delete);
+    public RefreshToken rotate(String token) {
+        RefreshToken oldToken = validateRefreshToken(token);
+        oldToken.setRevoked(true);
+        refreshTokenRepository.save(oldToken);
+        return createRefreshToken(oldToken.getUser());
+    }
+
+    /**
+     * Logout: توکن باطل می‌شود و از گردش خارج می‌شود.
+     */
+    @Transactional
+    public void revoke(String token) {
+        RefreshToken refreshToken = validateRefreshToken(token);
+        refreshToken.setRevoked(true);
+        refreshTokenRepository.save(refreshToken);
+    }
+
+    /**
+     * تولید یک توکن random با طول ۳۲ بایت → ۴۳ کاراکتر base64url.
+     */
+    private String generateSecureToken() {
+        byte[] randomBytes = new byte[32];
+        var secureRandom = new java.security.SecureRandom();
+        secureRandom.nextBytes(randomBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 }
