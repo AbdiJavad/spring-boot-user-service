@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,35 +18,32 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("${app.security.refresh-token-validity-seconds:604800}")
+    @Value("${app.security.refresh-token-validity-seconds:604800}") // پیش‌فرض ۷ روز
     private long refreshTokenValiditySeconds;
 
     /**
-     * یک توکن جدید با مقدار ۲۵۶ بیتی (base64url) می‌سازد
-     * و رابط آن را با کاربر ثبت می‌کند.
+     * ایجاد یا جایگزینی Refresh Token برای کاربر (با توجه به OneToOne بودن رابطه)
      */
     @Transactional
     public RefreshToken createRefreshToken(User user) {
-        RefreshToken refreshToken = RefreshToken.builder()
-                .token(generateSecureToken())
-                .expiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds))
-                .revoked(false)
-                .user(user)
-                .build();
+        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+                .orElseGet(() -> RefreshToken.builder().user(user).build());
+
+        refreshToken.setToken(generateSecureToken());
+        refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds));
+        refreshToken.setRevoked(false);
+
         return refreshTokenRepository.save(refreshToken);
     }
 
     /**
-     * بررسی می‌کند که توکن:
-     *  ۱) در پایگاه‌داده وجود داشته باشد
-     *  ۲) هنوز باطل نشده (revoked = false)
-     *  ۳) منقضی نشده باشد
-     *  در صورت موفقی، Reference Object را برمی‌گرداند.
+     * اعتبارسنجی توکن
      */
     @Transactional(readOnly = true)
     public RefreshToken validateRefreshToken(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+
         if (refreshToken.isRevoked()) {
             throw new IllegalArgumentException("Refresh token has been revoked");
         }
@@ -57,19 +54,22 @@ public class RefreshTokenService {
     }
 
     /**
-     * Rotation: توکن ورودی باطل می‌شود (logical delete)
-     * و یک توکن جدید پشتیبانی‌شده برای همان کاربر ساخته قرار می‌گیرد.
+     * چرخش توکن (Rotation): اعتبارسنجی و تولید مقدار جدید
      */
     @Transactional
     public RefreshToken rotate(String token) {
-        RefreshToken oldToken = validateRefreshToken(token);
-        oldToken.setRevoked(true);
-        refreshTokenRepository.save(oldToken);
-        return createRefreshToken(oldToken.getUser());
+        RefreshToken refreshToken = validateRefreshToken(token);
+
+        // تولید توکن امن جدید و تمدید انقضا روی همان موجودیت
+        refreshToken.setToken(generateSecureToken());
+        refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds));
+        refreshToken.setRevoked(false);
+
+        return refreshTokenRepository.save(refreshToken);
     }
 
     /**
-     * Logout: توکن باطل می‌شود و از گردش خارج می‌شود.
+     * ابطال توکن هنگام Logout
      */
     @Transactional
     public void revoke(String token) {
@@ -79,12 +79,11 @@ public class RefreshTokenService {
     }
 
     /**
-     * تولید یک توکن random با طول ۳۲ بایت → ۴۳ کاراکتر base64url.
+     * تولید ۲۵۶ بیت رشته تصادفی امن URL-safe
      */
     private String generateSecureToken() {
         byte[] randomBytes = new byte[32];
-        var secureRandom = new java.security.SecureRandom();
-        secureRandom.nextBytes(randomBytes);
+        new SecureRandom().nextBytes(randomBytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 }
