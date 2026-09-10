@@ -18,12 +18,9 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("${app.security.refresh-token-validity-seconds:604800}") // پیش‌فرض ۷ روز
+    @Value("${app.security.refresh-token-validity-seconds:604800}")
     private long refreshTokenValiditySeconds;
 
-    /**
-     * ایجاد یا جایگزینی Refresh Token برای کاربر (با توجه به OneToOne بودن رابطه)
-     */
     @Transactional
     public RefreshToken createRefreshToken(User user) {
         RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
@@ -36,11 +33,9 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
-    /**
-     * اعتبارسنجی توکن
-     */
     @Transactional(readOnly = true)
     public RefreshToken validateRefreshToken(String token) {
+        // برای اعتبار سنجی ساده از متد قدیمی استفاده می‌کنیم
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
 
@@ -53,24 +48,28 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
-    /**
-     * چرخش توکن (Rotation): اعتبارسنجی و تولید مقدار جدید
-     */
     @Transactional
     public RefreshToken rotate(String token) {
-        RefreshToken refreshToken = validateRefreshToken(token);
+        // ۱. واکشی با استفاده از متد بهینه‌شده (همراه با User)
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenWithUser(token)
+                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
-        // تولید توکن امن جدید و تمدید انقضا روی همان موجودیت
+        // ۲. بررسی وضعیت فعلی
+        if (refreshToken.isRevoked()) {
+            throw new IllegalArgumentException("Refresh token has been revoked");
+        }
+        if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
+            throw new IllegalArgumentException("Refresh token has expired");
+        }
+
+        // ۳. چرخش توکن (تولید مقدار جدید و تمدید انقضا)
         refreshToken.setToken(generateSecureToken());
         refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds));
-        refreshToken.setRevoked(false);
 
+        // ذخیره در دیتابیس
         return refreshTokenRepository.save(refreshToken);
     }
 
-    /**
-     * ابطال توکن هنگام Logout
-     */
     @Transactional
     public void revoke(String token) {
         RefreshToken refreshToken = validateRefreshToken(token);
@@ -78,9 +77,6 @@ public class RefreshTokenService {
         refreshTokenRepository.save(refreshToken);
     }
 
-    /**
-     * تولید ۲۵۶ بیت رشته تصادفی امن URL-safe
-     */
     private String generateSecureToken() {
         byte[] randomBytes = new byte[32];
         new SecureRandom().nextBytes(randomBytes);
