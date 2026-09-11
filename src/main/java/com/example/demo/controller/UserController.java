@@ -12,8 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/users")
@@ -29,8 +30,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(UserResponseDto.fromEntity(user));
+    public ResponseEntity<UserResponseDto> getCurrentUser(Principal principal) {
+        // حالا از طریق ایمیلِ موجود در توکن (Principal)، دیتای تازه را از دیتابیس می‌گیریم
+        User currentUser = userService.getUserByEmail(principal.getName());
+        return ResponseEntity.ok(UserResponseDto.fromEntity(currentUser));
     }
 
     @GetMapping
