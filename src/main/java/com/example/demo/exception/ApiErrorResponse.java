@@ -1,5 +1,6 @@
 package com.example.demo.exception;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,6 @@ public class ApiErrorResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private final Instant timestamp;
 
-    // این متد برای اضافه کردن فیلدهای اضافی (مثل traceId یا validation errors) در آینده عالی است
+    @JsonAnyGetter
     private final Map<String, Object> additionalProperties;
 }
