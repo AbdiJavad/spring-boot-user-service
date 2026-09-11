@@ -36,24 +36,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // H2 Console support
-            .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-                .requestMatchers("/h2-console/**", "/error", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
+                .authorizeHttpRequests(auth -> auth
+                        // 1. مسیرهای کاملاً عمومی (Public)
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
+                        .requestMatchers("/h2-console/**", "/error", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // 2. مسیرهای اختصاصی (باید قبل از /** تعریف شوند)
+                        // دسترسی به پروفایل شخصی برای هر دو نقش مجاز است
+                        .requestMatchers("/api/users/me").hasAnyRole("USER", "ADMIN")
+
+                        // 3. مسیرهای مدیریتی (فقط ADMIN)
+                        // هر عملیات دیگری روی کاربران محدود به ادمین است
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+                        // 4. سایر درخواست‌ها
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 }
