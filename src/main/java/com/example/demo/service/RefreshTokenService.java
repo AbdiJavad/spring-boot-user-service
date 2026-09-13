@@ -77,9 +77,11 @@ public class RefreshTokenService {
         refreshTokenRepository.save(refreshToken);
     }
 
+
     private String generateSecureToken() {
         byte[] randomBytes = new byte[32];
         new SecureRandom().nextBytes(randomBytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
+
 }
