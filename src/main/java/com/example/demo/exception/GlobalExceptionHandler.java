@@ -10,12 +10,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -161,4 +158,31 @@ public class GlobalExceptionHandler {
                 .contentType(MediaType.parseMediaType("application/problem+json"))
                 .body(errorResponse);
     }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiErrorResponse> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
+        if ("Refresh token not found".equals(ex.getMessage()) || (ex.getMessage() != null && ex.getMessage().contains("Refresh token"))) {
+            ApiErrorResponse error = ApiErrorResponse.builder()
+                    .timestamp(Instant.now())
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .title(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                    .detail(ex.getMessage())
+                    .instance(request.getRequestURI())
+                    .type("about:blank")
+                    .build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .title(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .type("about:blank")
+                .build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+
+
 }

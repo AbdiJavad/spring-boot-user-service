@@ -60,14 +60,14 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("دسترسی بدون توکن به اندپوینت محافظت‌شده باید 401 برگرداند")
+    @DisplayName("Ø¯Ø³ØªØ±Ø³ÛŒ Ø¨Ø¯ÙˆÙ† ØªÙˆÚ©Ù† Ø¨Ù‡ Ø§Ù†Ø¯Ù¾ÙˆÛŒÙ†Øª Ù…Ø­Ø§ÙØ¸Øªâ€ŒØ´Ø¯Ù‡ Ø¨Ø§ÛŒØ¯ 401 Ø¨Ø±Ú¯Ø±Ø¯Ø§Ù†Ø¯")
     void shouldReturn401WhenUnauthorized() throws Exception {
         mockMvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("ثبت‌نام کاربر جدید با داده‌های معتبر باید موفقیت‌آمیز باشد")
+    @DisplayName("Ø«Ø¨Øªâ€ŒÙ†Ø§Ù… Ú©Ø§Ø±Ø¨Ø± Ø¬Ø¯ÛŒØ¯ Ø¨Ø§ Ø¯Ø§Ø¯Ù‡â€ŒÙ‡Ø§ÛŒ Ù…Ø¹ØªØ¨Ø± Ø¨Ø§ÛŒØ¯ Ù…ÙˆÙÙ‚ÛŒØªâ€ŒØ¢Ù…ÛŒØ² Ø¨Ø§Ø´Ø¯")
     void shouldRegisterUserSuccessfully() throws Exception {
         String userJson = """
                 {
@@ -85,7 +85,7 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("ثبت‌نام با ایمیل تکراری باید با خطای 409 مواجه شود")
+    @DisplayName("Ø«Ø¨Øªâ€ŒÙ†Ø§Ù… Ø¨Ø§ Ø§ÛŒÙ…ÛŒÙ„ ØªÚ©Ø±Ø§Ø±ÛŒ Ø¨Ø§ÛŒØ¯ Ø¨Ø§ Ø®Ø·Ø§ÛŒ 409 Ù…ÙˆØ§Ø¬Ù‡ Ø´ÙˆØ¯")
     void shouldFailWhenRegisteringDuplicateEmail() throws Exception {
         User existingUser = User.builder()
                 .name("Existing")
@@ -110,7 +110,7 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("دسترسی به اندپوینت محافظت‌شده با توکن معتبر JWT")
+    @DisplayName("Ø¯Ø³ØªØ±Ø³ÛŒ Ø¨Ù‡ Ø§Ù†Ø¯Ù¾ÙˆÛŒÙ†Øª Ù…Ø­Ø§ÙØ¸Øªâ€ŒØ´Ø¯Ù‡ Ø¨Ø§ ØªÙˆÚ©Ù† Ù…Ø¹ØªØ¨Ø± JWT")
     void shouldAccessProtectedEndpointWithValidJwtToken() throws Exception {
         UserRegistrationDto registrationDto = new UserRegistrationDto(
                 "Jovan Admin",
@@ -126,11 +126,11 @@ public class SecurityIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists())
+                .andExpect(jsonPath("$.accessToken").exists())
                 .andReturn();
 
         String responseContent = loginResult.getResponse().getContentAsString();
-        String jwtToken = JsonPath.read(responseContent, "$.token");
+        String jwtToken = JsonPath.read(responseContent, "$.accessToken");
 
         mockMvc.perform(get("/api/users/me")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -204,17 +204,17 @@ public class SecurityIntegrationTest {
 
         String firstRefreshToken = JsonPath.read(loginResult.getResponse().getContentAsString(), "$.refreshToken");
 
-        // 2. Act: مرحله اول رفرش
+        // 2. Act: Ù…Ø±Ø­Ù„Ù‡ Ø§ÙˆÙ„ Ø±ÙØ±Ø´
         MvcResult firstRefreshResult = mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new RefreshTokenRequest(firstRefreshToken))))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // *** اینجا بسیار مهم است: باید ابتدا توکن جدید را از پاسخِ مرحله اول استخراج کنی ***
+        // *** Ø§ÛŒÙ†Ø¬Ø§ Ø¨Ø³ÛŒØ§Ø± Ù…Ù‡Ù… Ø§Ø³Øª: Ø¨Ø§ÛŒØ¯ Ø§Ø¨ØªØ¯Ø§ ØªÙˆÚ©Ù† Ø¬Ø¯ÛŒØ¯ Ø±Ø§ Ø§Ø² Ù¾Ø§Ø³Ø®Ù Ù…Ø±Ø­Ù„Ù‡ Ø§ÙˆÙ„ Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ú©Ù†ÛŒ ***
         String secondRefreshToken = JsonPath.read(firstRefreshResult.getResponse().getContentAsString(), "$.refreshToken");
 
-        // 3. Act: مرحله دوم رفرش (حالا که متغیر بالا تعریف شده، اینجا قرمز نمی‌شود)
+        // 3. Act: Ù…Ø±Ø­Ù„Ù‡ Ø¯ÙˆÙ… Ø±ÙØ±Ø´ (Ø­Ø§Ù„Ø§ Ú©Ù‡ Ù…ØªØºÛŒØ± Ø¨Ø§Ù„Ø§ ØªØ¹Ø±ÛŒÙ Ø´Ø¯Ù‡ØŒ Ø§ÛŒÙ†Ø¬Ø§ Ù‚Ø±Ù…Ø² Ù†Ù…ÛŒâ€ŒØ´ÙˆØ¯)
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new RefreshTokenRequest(secondRefreshToken))))
