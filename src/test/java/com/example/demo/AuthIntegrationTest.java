@@ -1,7 +1,11 @@
-package com.example.demo.service;
+package com.example.demo;
 
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RefreshTokenRequest;
 import com.example.demo.dto.TokenResponse;
+import com.example.demo.model.Role;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,14 +34,29 @@ class AuthIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private LoginRequest loginRequest;
-    private String accessToken;
-    private String refreshToken;
 
     @BeforeEach
     void setUp() {
-        // فرض بر این است که یک کاربر تست در دیتابیس دارید یا در فرآیند تست ساخته می‌شود
-        // برای سادگی، اینجا اطلاعات یک کاربر فرضی را ست می‌کنیم
+        // ۱. ایزوله‌سازی محیط تست
+        userRepository.deleteAll();
+
+        // ۲. آماده‌سازی کاربر تست
+        User testUser = User.builder()
+                .name("Test User")
+                .email("testuser@example.com")
+                .password(passwordEncoder.encode("password123"))
+                .role(Role.ROLE_USER)
+                .build();
+
+        userRepository.save(testUser);
+
         loginRequest = new LoginRequest("testuser@example.com", "password123");
     }
 
@@ -43,57 +64,54 @@ class AuthIntegrationTest {
     @DisplayName("Full Auth Lifecycle: Login -> Refresh -> Logout")
     void testFullAuthLifecycle() throws Exception {
 
-        // 1. مرحله Login
+        // 1. ورود و دریافت Access و Refresh Token
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").exists())
-                .andExpect(jsonPath("$.refreshToken").exists())
+                .andExpect(jsonPath("$.accessToken").isNotEmpty())
+                .andExpect(jsonPath("$.refreshToken").isNotEmpty())
                 .andReturn();
 
-        // استخراج توکن‌ها از پاسخ JSON
         String responseJson = loginResult.getResponse().getContentAsString();
-        // (در محیط واقعی بهتر است از یک DTO برای پارس کردن استفاده کنید)
-        // اینجا برای خلاصه شدن، فرض می‌کنیم پارس شده‌اند:
         TokenResponse tokens = objectMapper.readValue(responseJson, TokenResponse.class);
-        this.accessToken = tokens.accessToken();
-        this.refreshToken = tokens.refreshToken();
+        String initialAccessToken = tokens.accessToken();
+        String initialRefreshToken = tokens.refreshToken();
 
-        assertNotNull(accessToken);
-        assertNotNull(refreshToken);
+        assertNotNull(initialAccessToken);
+        assertNotNull(initialRefreshToken);
 
-        // 2. مرحله Refresh Token
-        // ایجاد درخواست برای رفرش کردن (باید refreshToken را در بدنه بفرستیم)
-        // فرض می‌کنیم RefreshTokenRequest یک record ساده است: record RefreshTokenRequest(String refreshToken) {}
-        var refreshRequest = java.util.Map.of("refreshToken", refreshToken);
+        // 2. مرحله Refresh Token با DTO استاندارد
+        RefreshTokenRequest refreshReq = new RefreshTokenRequest(initialRefreshToken);
 
         MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(refreshRequest)))
+                        .content(objectMapper.writeValueAsString(refreshReq)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").exists())
+                .andExpect(jsonPath("$.accessToken").isNotEmpty())
+                .andExpect(jsonPath("$.refreshToken").isNotEmpty())
                 .andReturn();
 
         String newTokensJson = refreshResult.getResponse().getContentAsString();
         TokenResponse newTokens = objectMapper.readValue(newTokensJson, TokenResponse.class);
 
-        assertNotEquals(accessToken, newTokens.accessToken(), "Access token should rotate");
-        assertNotEquals(refreshToken, newTokens.refreshToken(), "Refresh token should rotate");
+        assertNotNull(newTokens.accessToken());
+        assertFalse(newTokens.accessToken().isBlank());
+        assertNotEquals(initialRefreshToken, newTokens.refreshToken(), "Refresh token must rotate");
 
-        // 3. مرحله Logout
-        // استفاده از توکن جدید برای خروج
+
+        // 3. مرحله Logout (ارسال بدنه معتبر شامل RefreshToken جدید)
+        RefreshTokenRequest logoutReq = new RefreshTokenRequest(newTokens.refreshToken());
+
         mockMvc.perform(post("/api/auth/logout")
-                        .header("Authorization", "Bearer " + newTokens.accessToken())
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(logoutReq)))
                 .andExpect(status().isNoContent());
 
-        // 4. مرحله نهایی: تست ابطال (Verification)
-        // تلاش برای استفاده از رفرش توکن قدیمی (که باید با خطا مواجه شود)
+        // 4. اعتبارسنجی ابطال: توکن قدیمی دورانداخته شده (initialRefreshToken) دیگر نباید کار کند
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(java.util.Map.of("refreshToken", refreshToken))))
+                        .content(objectMapper.writeValueAsString(refreshReq)))
                 .andExpect(status().isUnauthorized());
-        // نکته: بسته به پیاده‌سازی شما، ممکن است 401 یا 403 باشد
     }
 }

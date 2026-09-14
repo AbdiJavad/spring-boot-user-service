@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
 public record TokenResponse(
-        String token,         // این همان accessToken است که تست دنبالش می‌گردد
+        String accessToken,         // این همان accessToken است که تست دنبالش می‌گردد
         String refreshToken,
         long expiresIn
 ) {
