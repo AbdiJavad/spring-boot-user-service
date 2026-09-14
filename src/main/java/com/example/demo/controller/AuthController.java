@@ -32,20 +32,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
-        // 1. احراز هویت
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
 
-        // 2. دریافت کاربر
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.email()));
 
-        // 3. ایجاد جفت توکن
         String accessToken = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user);
 
-        // 4. بازگرداندن پاسخ همگن با متد refresh
         return ResponseEntity.ok(
                 TokenResponse.of(accessToken, refreshToken.getToken(), ACCESS_TOKEN_EXPIRES_IN_SECONDS)
         );
