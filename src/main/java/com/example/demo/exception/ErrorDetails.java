@@ -13,7 +13,7 @@ public class ErrorDetails {
         this.status = status;
     }
 
-    // Getterها (Swagger برای تولید مستندات به این‌ها نیاز دارد)
+    // GetterÙ‡Ø§ (Swagger Ø¨Ø±Ø§ÛŒ ØªÙˆÙ„ÛŒØ¯ Ù…Ø³ØªÙ†Ø¯Ø§Øª Ø¨Ù‡ Ø§ÛŒÙ†â€ŒÙ‡Ø§ Ù†ÛŒØ§Ø² Ø¯Ø§Ø±Ø¯)
     public LocalDateTime getTimestamp() { return timestamp; }
     public String getMessage() { return message; }
     public int getStatus() { return status; }

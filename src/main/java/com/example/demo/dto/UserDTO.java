@@ -1,4 +1,4 @@
-package com.example.demo.dto; // اگر در پکیج dto ساختی
+package com.example.demo.dto; // Ø§Ú¯Ø± Ø¯Ø± Ù¾Ú©ÛŒØ¬ dto Ø³Ø§Ø®ØªÛŒ
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

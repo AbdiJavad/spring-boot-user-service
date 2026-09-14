@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getCurrentUser(Principal principal) {
-        // حالا از طریق ایمیلِ موجود در توکن (Principal)، دیتای تازه را از دیتابیس می‌گیریم
+        // Ø­Ø§Ù„Ø§ Ø§Ø² Ø·Ø±ÛŒÙ‚ Ø§ÛŒÙ…ÛŒÙ„Ù Ù…ÙˆØ¬ÙˆØ¯ Ø¯Ø± ØªÙˆÚ©Ù† (Principal)ØŒ Ø¯ÛŒØªØ§ÛŒ ØªØ§Ø²Ù‡ Ø±Ø§ Ø§Ø² Ø¯ÛŒØªØ§Ø¨ÛŒØ³ Ù…ÛŒâ€ŒÚ¯ÛŒØ±ÛŒÙ…
         User currentUser = userService.getUserByEmail(principal.getName());
         return ResponseEntity.ok(UserResponseDto.fromEntity(currentUser));
     }
