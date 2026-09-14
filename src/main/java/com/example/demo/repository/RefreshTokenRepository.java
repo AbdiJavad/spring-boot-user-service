@@ -12,13 +12,13 @@ import java.util.Optional;
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
-    // متد‌های قبلی (حیاتی برای سایر بخش‌های سیستم)
+    // Ù…ØªØ¯â€ŒÙ‡Ø§ÛŒ Ù‚Ø¨Ù„ÛŒ (Ø­ÛŒØ§ØªÛŒ Ø¨Ø±Ø§ÛŒ Ø³Ø§ÛŒØ± Ø¨Ø®Ø´â€ŒÙ‡Ø§ÛŒ Ø³ÛŒØ³ØªÙ…)
     Optional<RefreshToken> findByToken(String token);
     Optional<RefreshToken> findByUser(User user);
     void deleteByUser(User user);
 
-    // متد جدید برای حل مشکل LazyInitializationException
-    // این متد User را همزمان با RefreshToken واکشی (Fetch) می‌کند
+    // Ù…ØªØ¯ Ø¬Ø¯ÛŒØ¯ Ø¨Ø±Ø§ÛŒ Ø­Ù„ Ù…Ø´Ú©Ù„ LazyInitializationException
+    // Ø§ÛŒÙ† Ù…ØªØ¯ User Ø±Ø§ Ù‡Ù…Ø²Ù…Ø§Ù† Ø¨Ø§ RefreshToken ÙˆØ§Ú©Ø´ÛŒ (Fetch) Ù…ÛŒâ€ŒÚ©Ù†Ø¯
     @Query("SELECT rt FROM RefreshToken rt JOIN FETCH rt.user WHERE rt.token = :token")
     Optional<RefreshToken> findByTokenWithUser(@Param("token") String token);
 }

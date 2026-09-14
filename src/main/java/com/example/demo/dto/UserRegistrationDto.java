@@ -11,7 +11,7 @@ public record UserRegistrationDto(
         String name,
 
         @NotBlank(message = "E-Mail darf nicht leer sein")
-        @Email(message = "Bitte eine gültige E-Mail-Adresse eingeben")
+        @Email(message = "Bitte eine gÃ¼ltige E-Mail-Adresse eingeben")
         String email,
 
         @NotBlank(message = "Passwort darf nicht leer sein")
@@ -20,7 +20,7 @@ public record UserRegistrationDto(
 
         Role role
 ) {
-        // Overloaded Constructor برای پشتیبانی از ۳ پارامتر (پیش‌فرض بدون Role صریح)
+        // Overloaded Constructor Ø¨Ø±Ø§ÛŒ Ù¾Ø´ØªÛŒØ¨Ø§Ù†ÛŒ Ø§Ø² Û³ Ù¾Ø§Ø±Ø§Ù…ØªØ± (Ù¾ÛŒØ´â€ŒÙØ±Ø¶ Ø¨Ø¯ÙˆÙ† Role ØµØ±ÛŒØ­)
         public UserRegistrationDto(String name, String email, String password) {
                 this(name, email, password, null);
         }
