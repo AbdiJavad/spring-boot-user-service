@@ -13,14 +13,21 @@
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
 out/
 
+### Archives & Artifacts ###
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
 ### Logs & Backups ###
 *.log
-backup_pre_fix*/
-compile-error.txt
-project-audit.txt
+backup*/
+compile-error*.txt
+project-audit*.txt
+*.bak
