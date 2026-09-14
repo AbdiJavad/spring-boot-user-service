@@ -1,16 +1,20 @@
-package com.example.demo.dto; // یا پکیج پروژه خودت
+package com.example.demo.dto;
+
+import com.example.demo.model.Role;
+import com.example.demo.model.User;
 
 public record UserResponseDto(
         Long id,
         String name,
-        String email
+        String email,
+        Role role
 ) {
-    // یک متد استاتیک کمکی (Mapper) برای تبدیل Entity به DTO
-    public static UserResponseDto fromEntity(com.example.demo.model.User user) {
+    public static UserResponseDto fromEntity(User user) {
         return new UserResponseDto(
                 user.getId(),
                 user.getName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getRole()
         );
     }
 }

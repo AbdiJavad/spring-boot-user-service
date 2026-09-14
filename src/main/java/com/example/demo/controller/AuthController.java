@@ -1,49 +1,66 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RefreshTokenRequest;
+import com.example.demo.dto.TokenResponse;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtService;
+import com.example.demo.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
+    private static final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 3600L;
+
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            System.out.println("--> Login Versuch für Email: " + request.email());
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.email(), request.password())
+        );
 
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.email(), request.password())
-            );
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + request.email()));
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(request.email());
-            String token = jwtService.generateToken(userDetails);
+        String accessToken = jwtService.generateToken(user);
+        var refreshToken = refreshTokenService.createRefreshToken(user);
 
-            System.out.println("--> Token erfolgreich generiert!");
-            return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(
+                TokenResponse.of(accessToken, refreshToken.getToken(), ACCESS_TOKEN_EXPIRES_IN_SECONDS)
+        );
+    }
 
-        } catch (BadCredentialsException ex) {
-            System.out.println("--> Fehler: Falsches Passwort oder Benutzer nicht gefunden!");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültige E-Mail oder Passwort");
-        } catch (Exception ex) {
-            System.out.println("--> Unerwarteter Fehler: " + ex.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler: " + ex.getMessage());
-        }
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+        var newRefreshToken = refreshTokenService.rotate(request.refreshToken());
+        User user = newRefreshToken.getUser();
+        String accessToken = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(
+                TokenResponse.of(accessToken, newRefreshToken.getToken(), ACCESS_TOKEN_EXPIRES_IN_SECONDS)
+        );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
+        refreshTokenService.revoke(request.refreshToken());
+        return ResponseEntity.noContent().build();
     }
 }

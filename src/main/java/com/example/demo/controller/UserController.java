@@ -11,12 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -24,40 +23,40 @@ public class UserController {
 
     private final UserService userService;
 
-    // ۱. ثبت‌نام کاربر جدید همراه با بررسی خودکار اعتبارسنجی (@Valid)
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> registerUser(
-            @Valid @RequestBody UserRegistrationDto dto
-    ) {
-        User savedUser = userService.registerUser(dto);
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
+        User createdUser = userService.registerUser(registrationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDto.fromEntity(createdUser));
+    }
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(UserResponseDto.fromEntity(savedUser));
-    }
-    // ۲. دریافت همه کاربران (صفحه‌بندی شده)
-    @GetMapping
-    public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
-        return ResponseEntity.ok(userService.getAllUsers(pageable));
-    }
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<UserResponseDto> getCurrentUser(Principal principal) {
+        // حالا از طریق ایمیلِ موجود در توکن (Principal)، دیتای تازه را از دیتابیس می‌گیریم
+        User currentUser = userService.getUserByEmail(principal.getName());
+        return ResponseEntity.ok(UserResponseDto.fromEntity(currentUser));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<UserResponseDto>> getAllUsers(Pageable pageable) {
+        Page<UserResponseDto> page = userService.getAllUsers(pageable)
+                .map(UserResponseDto::fromEntity);
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
         return ResponseEntity.ok(UserResponseDto.fromEntity(user));
     }
-    // ۳. دریافت یک کاربر با ID
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
 
-    // ۴. ویرایش اطلاعات کاربر
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.updateUser(id, userDTO));
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+        User updated = userService.updateUser(id, dto);
+        return ResponseEntity.ok(UserResponseDto.fromEntity(updated));
     }
 
-    // ۵. حذف کاربر
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
