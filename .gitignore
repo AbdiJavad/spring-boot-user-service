@@ -31,3 +31,6 @@ backup*/
 compile-error*.txt
 project-audit*.txt
 *.bak
+
+# Automated Backups
+backups/
