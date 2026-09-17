@@ -17,13 +17,13 @@ import java.util.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1. خطای اعتبارسنجی ورودی‌ها (Validation Errors - 400 Bad Request)
+    // 1. Ø®Ø·Ø§ÛŒ Ø§Ø¹ØªØ¨Ø§Ø±Ø³Ù†Ø¬ÛŒ ÙˆØ±ÙˆØ¯ÛŒâ€ŒÙ‡Ø§ (Validation Errors - 400 Bad Request)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
 
-        // ساخت لیست خطاهای اعتبارسنجی به صورت آرایه‌ای از آبجکت‌ها (استاندارد RFC 9457)
+        // Ø³Ø§Ø®Øª Ù„ÛŒØ³Øª Ø®Ø·Ø§Ù‡Ø§ÛŒ Ø§Ø¹ØªØ¨Ø§Ø±Ø³Ù†Ø¬ÛŒ Ø¨Ù‡ ØµÙˆØ±Øª Ø¢Ø±Ø§ÛŒÙ‡â€ŒØ§ÛŒ Ø§Ø² Ø¢Ø¨Ø¬Ú©Øªâ€ŒÙ‡Ø§ (Ø§Ø³ØªØ§Ù†Ø¯Ø§Ø±Ø¯ RFC 9457)
         List<Map<String, String>> invalidParams = new ArrayList<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             Map<String, String> param = new LinkedHashMap<>();
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
 
 
-    // 2. خطای عدم دسترسی و مجوز ناکافی (403 Forbidden - Role/Permission Denial)
+    // 2. Ø®Ø·Ø§ÛŒ Ø¹Ø¯Ù… Ø¯Ø³ØªØ±Ø³ÛŒ Ùˆ Ù…Ø¬ÙˆØ² Ù†Ø§Ú©Ø§ÙÛŒ (403 Forbidden - Role/Permission Denial)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorResponse> handleAccessDeniedException(
             AccessDeniedException ex,
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    // 3. خطای عدم احراز هویت / توکن نامعتبر (401 Unauthorized)
+    // 3. Ø®Ø·Ø§ÛŒ Ø¹Ø¯Ù… Ø§Ø­Ø±Ø§Ø² Ù‡ÙˆÛŒØª / ØªÙˆÚ©Ù† Ù†Ø§Ù…Ø¹ØªØ¨Ø± (401 Unauthorized)
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
             AuthenticationException ex,
@@ -96,7 +96,7 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    // 4. خطای عدم یافتن منبع (Resource Not Found - 404 Not Found)
+    // 4. Ø®Ø·Ø§ÛŒ Ø¹Ø¯Ù… ÛŒØ§ÙØªÙ† Ù…Ù†Ø¨Ø¹ (Resource Not Found - 404 Not Found)
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(
             ResourceNotFoundException ex,
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    // 5. خطای تداخل/تکراری بودن ایمیل (Conflict - 409 Conflict)
+    // 5. Ø®Ø·Ø§ÛŒ ØªØ¯Ø§Ø®Ù„/ØªÚ©Ø±Ø§Ø±ÛŒ Ø¨ÙˆØ¯Ù† Ø§ÛŒÙ…ÛŒÙ„ (Conflict - 409 Conflict)
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleEmailAlreadyExistsException(
             EmailAlreadyExistsException ex,
@@ -138,7 +138,7 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    // 6. مدیریت سایر خطاهای پیش‌بینی‌نشده سرور (Internal Server Error - 500)
+    // 6. Ù…Ø¯ÛŒØ±ÛŒØª Ø³Ø§ÛŒØ± Ø®Ø·Ø§Ù‡Ø§ÛŒ Ù¾ÛŒØ´â€ŒØ¨ÛŒÙ†ÛŒâ€ŒÙ†Ø´Ø¯Ù‡ Ø³Ø±ÙˆØ± (Internal Server Error - 500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(
             Exception ex,

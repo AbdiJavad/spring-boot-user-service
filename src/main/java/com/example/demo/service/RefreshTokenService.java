@@ -35,7 +35,7 @@ public class RefreshTokenService {
 
     @Transactional(readOnly = true)
     public RefreshToken validateRefreshToken(String token) {
-        // برای اعتبار سنجی ساده از متد قدیمی استفاده می‌کنیم
+        // Ø¨Ø±Ø§ÛŒ Ø§Ø¹ØªØ¨Ø§Ø± Ø³Ù†Ø¬ÛŒ Ø³Ø§Ø¯Ù‡ Ø§Ø² Ù…ØªØ¯ Ù‚Ø¯ÛŒÙ…ÛŒ Ø§Ø³ØªÙØ§Ø¯Ù‡ Ù…ÛŒâ€ŒÚ©Ù†ÛŒÙ…
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
 
@@ -50,11 +50,11 @@ public class RefreshTokenService {
 
     @Transactional
     public RefreshToken rotate(String token) {
-        // ۱. واکشی با استفاده از متد بهینه‌شده (همراه با User)
+        // Û±. ÙˆØ§Ú©Ø´ÛŒ Ø¨Ø§ Ø§Ø³ØªÙØ§Ø¯Ù‡ Ø§Ø² Ù…ØªØ¯ Ø¨Ù‡ÛŒÙ†Ù‡â€ŒØ´Ø¯Ù‡ (Ù‡Ù…Ø±Ø§Ù‡ Ø¨Ø§ User)
         RefreshToken refreshToken = refreshTokenRepository.findByTokenWithUser(token)
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 
-        // ۲. بررسی وضعیت فعلی
+        // Û². Ø¨Ø±Ø±Ø³ÛŒ ÙˆØ¶Ø¹ÛŒØª ÙØ¹Ù„ÛŒ
         if (refreshToken.isRevoked()) {
             throw new IllegalArgumentException("Refresh token has been revoked");
         }
@@ -62,11 +62,11 @@ public class RefreshTokenService {
             throw new IllegalArgumentException("Refresh token has expired");
         }
 
-        // ۳. چرخش توکن (تولید مقدار جدید و تمدید انقضا)
+        // Û³. Ú†Ø±Ø®Ø´ ØªÙˆÚ©Ù† (ØªÙˆÙ„ÛŒØ¯ Ù…Ù‚Ø¯Ø§Ø± Ø¬Ø¯ÛŒØ¯ Ùˆ ØªÙ…Ø¯ÛŒØ¯ Ø§Ù†Ù‚Ø¶Ø§)
         refreshToken.setToken(generateSecureToken());
         refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds));
 
-        // ذخیره در دیتابیس
+        // Ø°Ø®ÛŒØ±Ù‡ Ø¯Ø± Ø¯ÛŒØªØ§Ø¨ÛŒØ³
         return refreshTokenRepository.save(refreshToken);
     }
 

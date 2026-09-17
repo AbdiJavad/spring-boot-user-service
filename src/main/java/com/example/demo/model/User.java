@@ -31,7 +31,7 @@ public class User implements UserDetails {
     private String name;
 
     @NotBlank(message = "E-Mail darf nicht leer sein")
-    @Email(message = "Bitte eine gültige E-Mail-Adresse eingeben")
+    @Email(message = "Bitte eine gÃ¼ltige E-Mail-Adresse eingeben")
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -49,7 +49,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Defensive coding: در صورت نال بودن رول، دسترسی پیش‌فرض ROLE_USER لحاظ می‌شود
+        // Defensive coding: Ø¯Ø± ØµÙˆØ±Øª Ù†Ø§Ù„ Ø¨ÙˆØ¯Ù† Ø±ÙˆÙ„ØŒ Ø¯Ø³ØªØ±Ø³ÛŒ Ù¾ÛŒØ´â€ŒÙØ±Ø¶ ROLE_USER Ù„Ø­Ø§Ø¸ Ù…ÛŒâ€ŒØ´ÙˆØ¯
         return List.of(new SimpleGrantedAuthority(this.role != null ? this.role.name() : "ROLE_USER"));
     }
 

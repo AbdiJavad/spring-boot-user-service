@@ -19,7 +19,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     private final ObjectMapper objectMapper;
 
     public CustomAccessDeniedHandler(ObjectMapper objectMapper) {
-        // استفاده از ObjectMapper سیستم یا ثبت ماژول زمان جاوا برای سریالایز Instant
+        // Ø§Ø³ØªÙØ§Ø¯Ù‡ Ø§Ø² ObjectMapper Ø³ÛŒØ³ØªÙ… ÛŒØ§ Ø«Ø¨Øª Ù…Ø§Ú˜ÙˆÙ„ Ø²Ù…Ø§Ù† Ø¬Ø§ÙˆØ§ Ø¨Ø±Ø§ÛŒ Ø³Ø±ÛŒØ§Ù„Ø§ÛŒØ² Instant
         this.objectMapper = objectMapper.copy().registerModule(new JavaTimeModule());
     }
 
