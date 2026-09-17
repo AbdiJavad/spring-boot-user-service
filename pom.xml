@@ -41,7 +41,18 @@
                 <version>${jjwt.version}</version>
                 <scope>runtime</scope>
             </dependency>
-        </dependencies>
+                <!-- Distributed Lock with ShedLock (Enterprise Multi-Replica Safe) -->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>5.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>5.16.0</version>
+        </dependency>
+    </dependencies>
     </dependencyManagement>
 
     <dependencies>
@@ -112,6 +123,17 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+            <!-- Distributed Lock with ShedLock (Enterprise Multi-Replica Safe) -->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>5.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>5.16.0</version>
         </dependency>
     </dependencies>
 
