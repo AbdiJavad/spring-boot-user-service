@@ -6,8 +6,10 @@ import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -17,19 +19,21 @@ public class TokenCleanupScheduler {
     private final RevokedTokenRepository revokedTokenRepository;
 
     /**
-     * Cleanup expired revoked tokens to prevent table/index bloat.
-     *
-     * Runs daily at 03:00 server time.
-     * If you deploy in multiple instances, consider adding a distributed lock (e.g., ShedLock).
+     * Cleanup expired revoked tokens to prevent table and index bloat.
+     * Protected by ShedLock for Kubernetes/multi-replica production environments.
      */
+    @Transactional
     @Scheduled(cron = "0 0 3 * * *")
+    @SchedulerLock(
+        name = "TokenCleanupScheduler_cleanupExpiredRevokedTokens",
+        lockAtLeastFor = "15s",
+        lockAtMostFor = "5m"
+    )
     public void cleanupExpiredRevokedTokens() {
         Instant start = Instant.now();
-        Instant now = start;
-
-        long deleted = revokedTokenRepository.deleteByExpiryAtBefore(now);
-
+        long deleted = revokedTokenRepository.deleteByExpiryAtBefore(start);
         Duration took = Duration.between(start, Instant.now());
+
         if (deleted > 0) {
             log.info("Token cleanup: deleted {} expired revoked tokens in {} ms", deleted, took.toMillis());
         } else {
