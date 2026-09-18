@@ -23,19 +23,18 @@ public class RefreshTokenService {
 
     @Transactional
     public RefreshToken createRefreshToken(User user) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
-                .orElseGet(() -> RefreshToken.builder().user(user).build());
-
-        refreshToken.setToken(generateSecureToken());
-        refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds));
-        refreshToken.setRevoked(false);
+        RefreshToken refreshToken = RefreshToken.builder()
+                .user(user)
+                .token(generateSecureToken())
+                .expiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds))
+                .revoked(false)
+                .build();
 
         return refreshTokenRepository.save(refreshToken);
     }
 
     @Transactional(readOnly = true)
     public RefreshToken validateRefreshToken(String token) {
-        // Ø¨Ø±Ø§ÛŒ Ø§Ø¹ØªØ¨Ø§Ø± Ø³Ù†Ø¬ÛŒ Ø³Ø§Ø¯Ù‡ Ø§Ø² Ù…ØªØ¯ Ù‚Ø¯ÛŒÙ…ÛŒ Ø§Ø³ØªÙØ§Ø¯Ù‡ Ù…ÛŒâ€ŒÚ©Ù†ÛŒÙ…
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
 
@@ -48,40 +47,52 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
+    /**
+     * Rotates a refresh token according to OAuth 2.0 Security BCP (RFC 9700, sect. 4.14.2):
+     * the old token row is preserved and marked as revoked (enabling reuse/theft detection),
+     * and a brand-new token row is issued for the same user.
+     */
     @Transactional
     public RefreshToken rotate(String token) {
-        // Û±. ÙˆØ§Ú©Ø´ÛŒ Ø¨Ø§ Ø§Ø³ØªÙØ§Ø¯Ù‡ Ø§Ø² Ù…ØªØ¯ Ø¨Ù‡ÛŒÙ†Ù‡â€ŒØ´Ø¯Ù‡ (Ù‡Ù…Ø±Ø§Ù‡ Ø¨Ø§ User)
-        RefreshToken refreshToken = refreshTokenRepository.findByTokenWithUser(token)
-                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
+        // 1. Look up the current (non-revoked) token together with its user
+        RefreshToken oldToken = refreshTokenRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
 
-        // Û². Ø¨Ø±Ø±Ø³ÛŒ ÙˆØ¶Ø¹ÛŒØª ÙØ¹Ù„ÛŒ
-        if (refreshToken.isRevoked()) {
-            throw new IllegalArgumentException("Refresh token has been revoked");
+        // 2. Validate current state
+        if (oldToken.isRevoked()) {
+            // Reuse of a revoked token indicates possible theft; revoke the whole family later.
+            throw new IllegalArgumentException("Refresh token has been revoked (possible reuse detected)");
         }
-        if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
+        if (oldToken.getExpiryDate().isBefore(Instant.now())) {
             throw new IllegalArgumentException("Refresh token has expired");
         }
 
-        // Û³. Ú†Ø±Ø®Ø´ ØªÙˆÚ©Ù† (ØªÙˆÙ„ÛŒØ¯ Ù…Ù‚Ø¯Ø§Ø± Ø¬Ø¯ÛŒØ¯ Ùˆ ØªÙ…Ø¯ÛŒØ¯ Ø§Ù†Ù‚Ø¶Ø§)
-        refreshToken.setToken(generateSecureToken());
-        refreshToken.setExpiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds));
+        // 3. Revoke the old token row (kept in DB for reuse detection / audit)
+        oldToken.setRevoked(true);
+        refreshTokenRepository.save(oldToken);
 
-        // Ø°Ø®ÛŒØ±Ù‡ Ø¯Ø± Ø¯ÛŒØªØ§Ø¨ÛŒØ³
-        return refreshTokenRepository.save(refreshToken);
+        // 4. Issue a brand-new token row for the same user
+        RefreshToken newToken = RefreshToken.builder()
+                .user(oldToken.getUser())
+                .token(generateSecureToken())
+                .expiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds))
+                .revoked(false)
+                .build();
+
+        return refreshTokenRepository.save(newToken);
     }
 
     @Transactional
     public void revoke(String token) {
-        RefreshToken refreshToken = validateRefreshToken(token);
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
     }
-
 
     private String generateSecureToken() {
         byte[] randomBytes = new byte[32];
         new SecureRandom().nextBytes(randomBytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
-
 }
