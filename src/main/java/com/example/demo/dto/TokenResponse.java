@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
 public record TokenResponse(
-        String accessToken,         // Ø§ÛŒÙ† Ù‡Ù…Ø§Ù† accessToken Ø§Ø³Øª Ú©Ù‡ ØªØ³Øª Ø¯Ù†Ø¨Ø§Ù„Ø´ Ù…ÛŒâ€ŒÚ¯Ø±Ø¯Ø¯
+        String accessToken,         // Ã˜Â§Ã›Å’Ã™â€  Ã™â€¡Ã™â€¦Ã˜Â§Ã™â€  accessToken Ã˜Â§Ã˜Â³Ã˜Âª ÃšÂ©Ã™â€¡ Ã˜ÂªÃ˜Â³Ã˜Âª Ã˜Â¯Ã™â€ Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Â´ Ã™â€¦Ã›Å’Ã¢â‚¬Å’ÃšÂ¯Ã˜Â±Ã˜Â¯Ã˜Â¯
         String refreshToken,
         long expiresIn
 ) {

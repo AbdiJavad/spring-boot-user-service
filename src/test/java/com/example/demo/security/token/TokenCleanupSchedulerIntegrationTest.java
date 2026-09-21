@@ -31,14 +31,14 @@ class TokenCleanupSchedulerIntegrationTest {
     void cleanupExpiredRevokedTokens_shouldDeleteOnlyExpiredTokens() {
         Instant now = Instant.now();
 
-        // ۱. رکورد منقضی (۲ ساعت پیش)
+        // Û±. Ø±Ú©ÙˆØ±Ø¯ Ù…Ù†Ù‚Ø¶ÛŒ (Û² Ø³Ø§Ø¹Øª Ù¾ÛŒØ´)
         RevokedToken expiredToken = new RevokedToken("expired-1", now.minus(2, ChronoUnit.HOURS), now.minus(3, ChronoUnit.HOURS));
-        // ۲. رکورد فعال (۲ ساعت آینده)
+        // Û². Ø±Ú©ÙˆØ±Ø¯ ÙØ¹Ø§Ù„ (Û² Ø³Ø§Ø¹Øª Ø¢ÛŒÙ†Ø¯Ù‡)
         RevokedToken activeToken = new RevokedToken("active-1", now.plus(2, ChronoUnit.HOURS), now.minus(10, ChronoUnit.MINUTES));
 
         revokedTokenRepository.save(expiredToken);
         revokedTokenRepository.save(activeToken);
-        revokedTokenRepository.flush(); // اطمینان از اعمال در دیتابیس
+        revokedTokenRepository.flush(); // Ø§Ø·Ù…ÛŒÙ†Ø§Ù† Ø§Ø² Ø§Ø¹Ù…Ø§Ù„ Ø¯Ø± Ø¯ÛŒØªØ§Ø¨ÛŒØ³
 
         tokenCleanupScheduler.cleanupExpiredRevokedTokens();
 
