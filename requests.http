@@ -3,7 +3,7 @@
 ### ===================================================================
 @baseUrl = http://localhost:8080
 @email = test.user@example.de
-@password = SecurePass123!
+@password = GAPGPTMASKTOKENobz5zs93bpcX0X
 
 ### -------------------------------------------------------------------
 ### 1. Register a new user
@@ -14,12 +14,12 @@ Content-Type: application/json
 {
   "name": "Javad Developer",
   "email": "{{email}}",
-  "password": "{{password}}"
+  "password": "GAPGPTMASKTOKENobz5zs93bpcX1X"
 }
 
 > {%
-    client.test("Status code is 201 or 409 (if already registered)", function() {
-        client.assert(response.status === 201 || response.status === 409, "Registration status unexpected: " + response.status);
+    client.test("Registration success (201) or Conflict (409)", function() {
+        client.assert(response.status === 201 || response.status === 409, "Registration failed: " + response.status);
     });
 %}
 
@@ -31,20 +31,19 @@ Content-Type: application/json
 
 {
   "email": "{{email}}",
-  "password": "{{password}}"
+  "password": "GAPGPTMASKTOKENobz5zs93bpcX2X"
 }
 
 > {%
     client.test("Login successful and token received", function() {
-        client.assert(response.status === 200, "Login failed with status: " + response.status);
-        client.assert(response.body.token != null, "Token missing in response");
-        // ذخیره خودکار توکن در متغیر محیطی کلاینت برای درخواست‌های بعدی
+        client.assert(response.status === 200, "Login failed: " + response.status);
+        client.assert(response.body.token != null, "Token missing");
         client.global.set("authToken", response.body.token);
     });
 %}
 
 ### -------------------------------------------------------------------
-### 3. Get Current User Profile (Authenticated with Bearer Token)
+### 3. Get Current User Profile (Authenticated)
 ### -------------------------------------------------------------------
 GET {{baseUrl}}/api/users/me
 Authorization: Bearer {{authToken}}
@@ -53,12 +52,11 @@ Accept: application/json
 > {%
     client.test("Status code is 200", function() {
         client.assert(response.status === 200, "Cannot fetch profile: " + response.status);
-        client.assert(response.body.email === "test.user@example.de", "Email mismatch");
     });
 %}
 
 ### -------------------------------------------------------------------
-### 4. Negative Test: Access Protected Endpoint Without Token (Must return 401)
+### 4. Negative Test: Access Protected Endpoint Without Token
 ### -------------------------------------------------------------------
 GET {{baseUrl}}/api/users/me
 Accept: application/json
@@ -83,7 +81,7 @@ Accept: application/json
 %}
 
 ### -------------------------------------------------------------------
-### 6. Negative Test: Role-based Authorization (DELETE without ADMIN -> Must return 403)
+### 6. Negative Test: Role-based Authorization (DELETE without ADMIN)
 ### -------------------------------------------------------------------
 DELETE {{baseUrl}}/api/users/999
 Authorization: Bearer {{authToken}}

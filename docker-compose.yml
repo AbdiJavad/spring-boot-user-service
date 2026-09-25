@@ -1,38 +1,40 @@
 ﻿version: '3.8'
 
 services:
+  app:
+    build:
+      context: .
+    container_name: spring_user_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: GAPGPTMASKTOKENjayeb7pnwlX7X # یکسان با رمز Postgres
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
   postgres:
-    image: postgres:16-alpine
     container_name: postgres_db
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: user_service_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_PASSWORD: GAPGPTMASKTOKENjayeb7pnwlX8X # یکسان با رمز برنامه
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d user_service_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     ports:
       - "5432:5432"
+    restart: unless-stopped
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-
-  app:
-    build: .
-    container_name: spring_user_service
-    depends_on:
-      - postgres
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/user_service_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=secretpassword
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    networks:
-      - app-network
+      - postgres_data:/var/lib/postgresql/data:rw
 
 volumes:
-_  postgres_data:
-
-networks:
-  app-network:
-    driver: bridge
+  postgres_data: {}
