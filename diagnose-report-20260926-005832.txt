@@ -1,0 +1,1028 @@
+﻿Project: D:\demo
+
+
+Backup created: D:\demo-backup-20260926-005832
+
+--- Project structure ---
+   test-api.http
+.backup_revocation\AuthController.java.20260917_095824.bak
+.backup_revocation\AuthController.java.20260917_134104.bak
+.backup_revocation\AuthController.java.bak
+.backup_revocation\AuthResponse.java.bak
+.gitattributes
+.gitignore
+.mvn\wrapper\maven-wrapper.properties
+_diagnostics\mvn_test_20260918_122815.log
+analysis-report-20260925_204522.txt
+analyze-and-build.sh
+app.log
+app_err.log
+AuditProject.ps1
+backup_20260911_002239\pom.xml
+backup_20260911_002239\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_20260911_002239\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java
+backup_20260911_002239\src\main\java\com\example\demo\controller\HelloController.java
+backup_20260911_002239\src\main\java\com\example\demo\controller\UserController.java
+backup_20260911_002239\src\main\java\com\example\demo\DemoApplication.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\TokenResponse.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserDTO.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_20260911_002239\src\main\java\com\example\demo\GreetingService.java
+backup_20260911_002239\src\main\java\com\example\demo\MessageService.java
+backup_20260911_002239\src\main\java\com\example\demo\model\RefreshToken.java
+backup_20260911_002239\src\main\java\com\example\demo\model\Role.java
+backup_20260911_002239\src\main\java\com\example\demo\model\User.java
+backup_20260911_002239\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_20260911_002239\src\main\java\com\example\demo\repository\UserRepository.java
+backup_20260911_002239\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_20260911_002239\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_20260911_002239\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_20260911_002239\src\main\java\com\example\demo\security\JwtService.java
+backup_20260911_002239\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_20260911_002239\src\main\java\com\example\demo\service\UserService.java
+backup_20260911_002239\src\main\resources\application.properties
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_20260911_002239\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_20260911_002239\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_20260911_002456\pom.xml
+backup_20260911_002456\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_20260911_002456\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java
+backup_20260911_002456\src\main\java\com\example\demo\controller\HelloController.java
+backup_20260911_002456\src\main\java\com\example\demo\controller\UserController.java
+backup_20260911_002456\src\main\java\com\example\demo\DemoApplication.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\TokenResponse.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserDTO.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_20260911_002456\src\main\java\com\example\demo\GreetingService.java
+backup_20260911_002456\src\main\java\com\example\demo\MessageService.java
+backup_20260911_002456\src\main\java\com\example\demo\model\RefreshToken.java
+backup_20260911_002456\src\main\java\com\example\demo\model\Role.java
+backup_20260911_002456\src\main\java\com\example\demo\model\User.java
+backup_20260911_002456\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_20260911_002456\src\main\java\com\example\demo\repository\UserRepository.java
+backup_20260911_002456\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_20260911_002456\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_20260911_002456\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_20260911_002456\src\main\java\com\example\demo\security\JwtService.java
+backup_20260911_002456\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_20260911_002456\src\main\java\com\example\demo\service\UserService.java
+backup_20260911_002456\src\main\resources\application.properties
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_20260911_002456\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_20260911_002456\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\HelloController.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\UserController.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\DemoApplication.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\ErrorResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\TokenResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserDTO.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\GreetingService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\MessageService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\RefreshToken.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\Role.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\User.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\UserRepository.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\requests
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedToken.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\TokenRevocationService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\UserService.java
+backup_audit_20260917_235949\src\main\resources\application.properties
+backup_audit_20260917_235949\src\test\java\com\example\demo\AuthIntegrationTest.java
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_audit_20260917_235949\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_audit_20260917_235949\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_pre_fix\20260918-120144\pom.xml
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\model\RefreshToken.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedToken.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_pre_fix\20260918-120144\src\main\resources\application.properties
+backup_pre_fix\20260918-120144\src\main\resources\schema.sql
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_pre_fix\application.properties
+backup_pre_fix\schema.sql
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\AuthController.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\HelloController.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\UserController.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\DemoApplication.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserDTO.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\GreetingService.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\MessageService.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\Role.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\User.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\repository\UserRepository.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtService.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\service\UserService.java
+backup_pre_fix_20260907_195917\src\main\resources\application.properties
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backups\backup_20260915_003254\pom.xml
+backups\backup_20260915_003254\src\main\java\com\example\demo\config\ApplicationConfig.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\config\OpenApiConfig.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\HelloController.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\UserController.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\DemoApplication.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\AuthResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\ErrorResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\LoginRequest.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\TokenResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserDTO.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserResponseDto.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ErrorDetails.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\GreetingService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\MessageService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\RefreshToken.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\Role.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\User.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\UserRepository.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\requests
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\SecurityConfig.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\UserService.java
+backups\backup_20260915_003254\src\main\resources\application.properties
+backups\backup_20260915_003254\src\test\java\com\example\demo\AuthIntegrationTest.java
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backups\backup_20260915_003254\src\test\java\com\example\demo\service\UserServiceTest.java
+backups\backup_20260915_003254\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+check-project.ps1
+compile-error.txt
+demo.iml
+diagnose.ps1
+diagnose-report-20260926-005832.txt
+docker-compose.yml
+Dockerfile
+enterprise-audit.ps1
+gitignore
+HELP.md
+mvnw
+mvnw.cmd
+pom.xml
+project-audit.txt
+requests.http
+src\main\java\com\example\demo\config\ApplicationConfig.java
+src\main\java\com\example\demo\config\OpenApiConfig.java
+src\main\java\com\example\demo\config\ShedLockConfig.java
+src\main\java\com\example\demo\controller\AuthController.java
+src\main\java\com\example\demo\controller\HelloController.java
+src\main\java\com\example\demo\controller\UserController.java
+src\main\java\com\example\demo\DemoApplication.java
+src\main\java\com\example\demo\dto\AuthenticationRequest.java
+src\main\java\com\example\demo\dto\AuthResponse.java
+src\main\java\com\example\demo\dto\ErrorResponse.java
+src\main\java\com\example\demo\dto\LoginRequest.java
+src\main\java\com\example\demo\dto\LoginResponseDto.java
+src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+src\main\java\com\example\demo\dto\TokenResponse.java
+src\main\java\com\example\demo\dto\UserDTO.java
+src\main\java\com\example\demo\dto\UserRegistrationDto.java
+src\main\java\com\example\demo\dto\UserResponseDto.java
+src\main\java\com\example\demo\exception\ApiErrorResponse.java
+src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+src\main\java\com\example\demo\exception\ErrorDetails.java
+src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+src\main\java\com\example\demo\GreetingService.java
+src\main\java\com\example\demo\MessageService.java
+src\main\java\com\example\demo\model\RefreshToken.java
+src\main\java\com\example\demo\model\Role.java
+src\main\java\com\example\demo\model\User.java
+src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+src\main\java\com\example\demo\repository\UserRepository.java
+src\main\java\com\example\demo\requests
+src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+src\main\java\com\example\demo\security\JwtService.java
+src\main\java\com\example\demo\security\SecurityConfig.java
+src\main\java\com\example\demo\security\token\RevokedToken.java
+src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java
+src\main\java\com\example\demo\security\token\TokenRevocationService.java
+src\main\java\com\example\demo\service\RefreshTokenService.java
+src\main\java\com\example\demo\service\UserService.java
+src\main\resources\application.properties
+src\main\resources\schema.sql
+src\main\resources\schema.sql.bak
+src\test\java\com\example\demo\ActuatorSecurityIntegrationTest.java
+src\test\java\com\example\demo\AuthIntegrationTest.java
+src\test\java\com\example\demo\controller\AuthControllerIntegrationTest.java
+src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java
+src\test\java\com\example\demo\SecurityIntegrationTest.java
+src\test\java\com\example\demo\service\UserServiceTest.java
+src\test\java\com\example\demo\UserValidationIntegrationTest.java
+src\test\resources\application.properties
+src\test\resources\schema.sql
+start-demo.ps1
+super-fixer.ps1
+test.http
+test_output.log
+tools\project-audit.ps1
+
+--- Java / build / Spring files ---
+backup_20260911_002239\pom.xml
+backup_20260911_002239\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_20260911_002239\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java
+backup_20260911_002239\src\main\java\com\example\demo\controller\HelloController.java
+backup_20260911_002239\src\main\java\com\example\demo\controller\UserController.java
+backup_20260911_002239\src\main\java\com\example\demo\DemoApplication.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\TokenResponse.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserDTO.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_20260911_002239\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_20260911_002239\src\main\java\com\example\demo\GreetingService.java
+backup_20260911_002239\src\main\java\com\example\demo\MessageService.java
+backup_20260911_002239\src\main\java\com\example\demo\model\RefreshToken.java
+backup_20260911_002239\src\main\java\com\example\demo\model\Role.java
+backup_20260911_002239\src\main\java\com\example\demo\model\User.java
+backup_20260911_002239\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_20260911_002239\src\main\java\com\example\demo\repository\UserRepository.java
+backup_20260911_002239\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_20260911_002239\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_20260911_002239\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_20260911_002239\src\main\java\com\example\demo\security\JwtService.java
+backup_20260911_002239\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_20260911_002239\src\main\java\com\example\demo\service\UserService.java
+backup_20260911_002239\src\main\resources\application.properties
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_20260911_002239\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_20260911_002239\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_20260911_002456\pom.xml
+backup_20260911_002456\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_20260911_002456\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java
+backup_20260911_002456\src\main\java\com\example\demo\controller\HelloController.java
+backup_20260911_002456\src\main\java\com\example\demo\controller\UserController.java
+backup_20260911_002456\src\main\java\com\example\demo\DemoApplication.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\TokenResponse.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserDTO.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_20260911_002456\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_20260911_002456\src\main\java\com\example\demo\GreetingService.java
+backup_20260911_002456\src\main\java\com\example\demo\MessageService.java
+backup_20260911_002456\src\main\java\com\example\demo\model\RefreshToken.java
+backup_20260911_002456\src\main\java\com\example\demo\model\Role.java
+backup_20260911_002456\src\main\java\com\example\demo\model\User.java
+backup_20260911_002456\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_20260911_002456\src\main\java\com\example\demo\repository\UserRepository.java
+backup_20260911_002456\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_20260911_002456\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_20260911_002456\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_20260911_002456\src\main\java\com\example\demo\security\JwtService.java
+backup_20260911_002456\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_20260911_002456\src\main\java\com\example\demo\service\UserService.java
+backup_20260911_002456\src\main\resources\application.properties
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_20260911_002456\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_20260911_002456\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\HelloController.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\UserController.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\DemoApplication.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\ErrorResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\TokenResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserDTO.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\GreetingService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\MessageService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\RefreshToken.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\Role.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\User.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\UserRepository.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedToken.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\TokenRevocationService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\UserService.java
+backup_audit_20260917_235949\src\main\resources\application.properties
+backup_audit_20260917_235949\src\test\java\com\example\demo\AuthIntegrationTest.java
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_audit_20260917_235949\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_audit_20260917_235949\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_pre_fix\20260918-120144\pom.xml
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\model\RefreshToken.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedToken.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java
+backup_pre_fix\20260918-120144\src\main\resources\application.properties
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backup_pre_fix\application.properties
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\ApplicationConfig.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\OpenApiConfig.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\AuthController.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\HelloController.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\UserController.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\DemoApplication.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\AuthResponse.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\LoginRequest.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserDTO.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserResponseDto.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ErrorDetails.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\GreetingService.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\MessageService.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\Role.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\User.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\repository\UserRepository.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtService.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\SecurityConfig.java
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\service\UserService.java
+backup_pre_fix_20260907_195917\src\main\resources\application.properties
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\service\UserServiceTest.java
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+backups\backup_20260915_003254\pom.xml
+backups\backup_20260915_003254\src\main\java\com\example\demo\config\ApplicationConfig.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\config\OpenApiConfig.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\HelloController.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\UserController.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\DemoApplication.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\AuthenticationRequest.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\AuthResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\ErrorResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\LoginRequest.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\LoginResponseDto.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\TokenResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserDTO.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserRegistrationDto.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserResponseDto.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ApiErrorResponse.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ErrorDetails.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\GreetingService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\MessageService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\RefreshToken.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\Role.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\User.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\UserRepository.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\SecurityConfig.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\UserService.java
+backups\backup_20260915_003254\src\main\resources\application.properties
+backups\backup_20260915_003254\src\test\java\com\example\demo\AuthIntegrationTest.java
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java
+backups\backup_20260915_003254\src\test\java\com\example\demo\service\UserServiceTest.java
+backups\backup_20260915_003254\src\test\java\com\example\demo\UserValidationIntegrationTest.java
+mvnw
+mvnw.cmd
+pom.xml
+src\main\java\com\example\demo\config\ApplicationConfig.java
+src\main\java\com\example\demo\config\OpenApiConfig.java
+src\main\java\com\example\demo\config\ShedLockConfig.java
+src\main\java\com\example\demo\controller\AuthController.java
+src\main\java\com\example\demo\controller\HelloController.java
+src\main\java\com\example\demo\controller\UserController.java
+src\main\java\com\example\demo\DemoApplication.java
+src\main\java\com\example\demo\dto\AuthenticationRequest.java
+src\main\java\com\example\demo\dto\AuthResponse.java
+src\main\java\com\example\demo\dto\ErrorResponse.java
+src\main\java\com\example\demo\dto\LoginRequest.java
+src\main\java\com\example\demo\dto\LoginResponseDto.java
+src\main\java\com\example\demo\dto\RefreshTokenRequest.java
+src\main\java\com\example\demo\dto\TokenResponse.java
+src\main\java\com\example\demo\dto\UserDTO.java
+src\main\java\com\example\demo\dto\UserRegistrationDto.java
+src\main\java\com\example\demo\dto\UserResponseDto.java
+src\main\java\com\example\demo\exception\ApiErrorResponse.java
+src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+src\main\java\com\example\demo\exception\ErrorDetails.java
+src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+src\main\java\com\example\demo\GreetingService.java
+src\main\java\com\example\demo\MessageService.java
+src\main\java\com\example\demo\model\RefreshToken.java
+src\main\java\com\example\demo\model\Role.java
+src\main\java\com\example\demo\model\User.java
+src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+src\main\java\com\example\demo\repository\UserRepository.java
+src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+src\main\java\com\example\demo\security\JwtService.java
+src\main\java\com\example\demo\security\SecurityConfig.java
+src\main\java\com\example\demo\security\token\RevokedToken.java
+src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java
+src\main\java\com\example\demo\security\token\TokenRevocationService.java
+src\main\java\com\example\demo\service\RefreshTokenService.java
+src\main\java\com\example\demo\service\UserService.java
+src\main\resources\application.properties
+src\test\java\com\example\demo\ActuatorSecurityIntegrationTest.java
+src\test\java\com\example\demo\AuthIntegrationTest.java
+src\test\java\com\example\demo\controller\AuthControllerIntegrationTest.java
+src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java
+src\test\java\com\example\demo\SecurityIntegrationTest.java
+src\test\java\com\example\demo\service\UserServiceTest.java
+src\test\java\com\example\demo\UserValidationIntegrationTest.java
+src\test\resources\application.properties
+
+--- Encoding / BOM ---
+   test-api.http : BOM=none; bytes=226
+.gitattributes : BOM=UTF-8; bytes=268
+.gitignore : BOM=UTF-8; bytes=443
+analysis-report-20260925_204522.txt : BOM=none; bytes=792688
+analyze-and-build.sh : BOM=none; bytes=5053
+app.log : BOM=none; bytes=16851
+app_err.log : BOM=none; bytes=0
+AuditProject.ps1 : BOM=none; bytes=5191
+check-project.ps1 : BOM=none; bytes=1635
+compile-error.txt : BOM=UTF-16 LE; bytes=8922
+demo.iml : BOM=none; bytes=271
+diagnose-report-20260926-005832.txt : BOM=UTF-8; bytes=43446
+diagnose.ps1 : BOM=UTF-8; bytes=784
+docker-compose.yml : BOM=UTF-8; bytes=1117
+Dockerfile : BOM=none; bytes=112
+enterprise-audit.ps1 : BOM=none; bytes=6991
+gitignore : BOM=none; bytes=0
+HELP.md : BOM=none; bytes=1243
+mvnw : BOM=none; bytes=11790
+mvnw.cmd : BOM=none; bytes=8292
+pom.xml : BOM=none; bytes=5819
+project-audit.txt : BOM=UTF-8; bytes=7406
+requests.http : BOM=none; bytes=3364
+start-demo.ps1 : BOM=UTF-8; bytes=538
+super-fixer.ps1 : BOM=UTF-8; bytes=2512
+test.http : BOM=none; bytes=1181
+test_output.log : BOM=UTF-16 LE; bytes=13118
+.backup_revocation\AuthController.java.20260917_095824.bak : BOM=none; bytes=4698
+.backup_revocation\AuthController.java.20260917_134104.bak : BOM=none; bytes=4698
+.backup_revocation\AuthController.java.bak : BOM=none; bytes=3507
+.backup_revocation\AuthResponse.java.bak : BOM=none; bytes=373
+.mvn\wrapper\maven-wrapper.properties : BOM=none; bytes=168
+backups\backup_20260915_003254\pom.xml : BOM=none; bytes=4730
+backups\backup_20260915_003254\src\main\java\com\example\demo\DemoApplication.java : BOM=none; bytes=305
+backups\backup_20260915_003254\src\main\java\com\example\demo\GreetingService.java : BOM=none; bytes=246
+backups\backup_20260915_003254\src\main\java\com\example\demo\MessageService.java : BOM=none; bytes=974
+backups\backup_20260915_003254\src\main\java\com\example\demo\requests : BOM=none; bytes=686
+backups\backup_20260915_003254\src\main\java\com\example\demo\config\ApplicationConfig.java : BOM=none; bytes=1843
+backups\backup_20260915_003254\src\main\java\com\example\demo\config\OpenApiConfig.java : BOM=none; bytes=1445
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java : BOM=none; bytes=2807
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\HelloController.java : BOM=none; bytes=2585
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\UserController.java : BOM=none; bytes=2939
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\AuthenticationRequest.java : BOM=none; bytes=413
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\AuthResponse.java : BOM=none; bytes=373
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\ErrorResponse.java : BOM=none; bytes=1207
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\LoginRequest.java : BOM=none; bytes=334
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\LoginResponseDto.java : BOM=none; bytes=292
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\RefreshTokenRequest.java : BOM=none; bytes=212
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\TokenResponse.java : BOM=none; bytes=616
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserDTO.java : BOM=none; bytes=661
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserRegistrationDto.java : BOM=none; bytes=1287
+backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserResponseDto.java : BOM=none; bytes=455
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ApiErrorResponse.java : BOM=none; bytes=676
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java : BOM=none; bytes=201
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ErrorDetails.java : BOM=none; bytes=886
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java : BOM=none; bytes=9968
+backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ResourceNotFoundException.java : BOM=none; bytes=544
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\RefreshToken.java : BOM=none; bytes=724
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\Role.java : BOM=none; bytes=90
+backups\backup_20260915_003254\src\main\java\com\example\demo\model\User.java : BOM=none; bytes=2471
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : BOM=none; bytes=1633
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\UserRepository.java : BOM=none; bytes=1100
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java : BOM=none; bytes=2215
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java : BOM=none; bytes=1831
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java : BOM=none; bytes=3278
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtService.java : BOM=none; bytes=2780
+backups\backup_20260915_003254\src\main\java\com\example\demo\security\SecurityConfig.java : BOM=none; bytes=4909
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java : BOM=none; bytes=4389
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\UserService.java : BOM=none; bytes=3097
+backups\backup_20260915_003254\src\main\resources\application.properties : BOM=none; bytes=849
+backups\backup_20260915_003254\src\test\java\com\example\demo\AuthIntegrationTest.java : BOM=none; bytes=5281
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=11604
+backups\backup_20260915_003254\src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4213
+backups\backup_20260915_003254\src\test\java\com\example\demo\service\UserServiceTest.java : BOM=none; bytes=1643
+backup_20260911_002239\pom.xml : BOM=none; bytes=4570
+backup_20260911_002239\src\main\java\com\example\demo\DemoApplication.java : BOM=none; bytes=305
+backup_20260911_002239\src\main\java\com\example\demo\GreetingService.java : BOM=none; bytes=246
+backup_20260911_002239\src\main\java\com\example\demo\MessageService.java : BOM=none; bytes=559
+backup_20260911_002239\src\main\java\com\example\demo\config\ApplicationConfig.java : BOM=none; bytes=1843
+backup_20260911_002239\src\main\java\com\example\demo\config\OpenApiConfig.java : BOM=none; bytes=815
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java : BOM=none; bytes=3413
+backup_20260911_002239\src\main\java\com\example\demo\controller\HelloController.java : BOM=none; bytes=2585
+backup_20260911_002239\src\main\java\com\example\demo\controller\UserController.java : BOM=none; bytes=2358
+backup_20260911_002239\src\main\java\com\example\demo\dto\AuthenticationRequest.java : BOM=none; bytes=409
+backup_20260911_002239\src\main\java\com\example\demo\dto\AuthResponse.java : BOM=none; bytes=373
+backup_20260911_002239\src\main\java\com\example\demo\dto\LoginRequest.java : BOM=none; bytes=334
+backup_20260911_002239\src\main\java\com\example\demo\dto\LoginResponseDto.java : BOM=none; bytes=292
+backup_20260911_002239\src\main\java\com\example\demo\dto\RefreshTokenRequest.java : BOM=none; bytes=221
+backup_20260911_002239\src\main\java\com\example\demo\dto\TokenResponse.java : BOM=none; bytes=476
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserDTO.java : BOM=none; bytes=618
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserRegistrationDto.java : BOM=none; bytes=1131
+backup_20260911_002239\src\main\java\com\example\demo\dto\UserResponseDto.java : BOM=none; bytes=455
+backup_20260911_002239\src\main\java\com\example\demo\exception\ApiErrorResponse.java : BOM=none; bytes=885
+backup_20260911_002239\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java : BOM=none; bytes=201
+backup_20260911_002239\src\main\java\com\example\demo\exception\ErrorDetails.java : BOM=none; bytes=731
+backup_20260911_002239\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java : BOM=none; bytes=3280
+backup_20260911_002239\src\main\java\com\example\demo\exception\ResourceNotFoundException.java : BOM=none; bytes=436
+backup_20260911_002239\src\main\java\com\example\demo\model\RefreshToken.java : BOM=none; bytes=727
+backup_20260911_002239\src\main\java\com\example\demo\model\Role.java : BOM=none; bytes=90
+backup_20260911_002239\src\main\java\com\example\demo\model\User.java : BOM=none; bytes=2979
+backup_20260911_002239\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : BOM=none; bytes=1240
+backup_20260911_002239\src\main\java\com\example\demo\repository\UserRepository.java : BOM=none; bytes=779
+backup_20260911_002239\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java : BOM=none; bytes=1475
+backup_20260911_002239\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java : BOM=none; bytes=1484
+backup_20260911_002239\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java : BOM=none; bytes=3755
+backup_20260911_002239\src\main\java\com\example\demo\security\JwtService.java : BOM=none; bytes=2719
+backup_20260911_002239\src\main\java\com\example\demo\security\SecurityConfig.java : BOM=none; bytes=2995
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java : BOM=none; bytes=3765
+backup_20260911_002239\src\main\java\com\example\demo\service\UserService.java : BOM=none; bytes=2785
+backup_20260911_002239\src\main\resources\application.properties : BOM=none; bytes=982
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=12130
+backup_20260911_002239\src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4306
+backup_20260911_002239\src\test\java\com\example\demo\service\UserServiceTest.java : BOM=none; bytes=1699
+backup_20260911_002456\pom.xml : BOM=none; bytes=4570
+backup_20260911_002456\src\main\java\com\example\demo\DemoApplication.java : BOM=none; bytes=305
+backup_20260911_002456\src\main\java\com\example\demo\GreetingService.java : BOM=none; bytes=246
+backup_20260911_002456\src\main\java\com\example\demo\MessageService.java : BOM=none; bytes=559
+backup_20260911_002456\src\main\java\com\example\demo\config\ApplicationConfig.java : BOM=none; bytes=1843
+backup_20260911_002456\src\main\java\com\example\demo\config\OpenApiConfig.java : BOM=none; bytes=815
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java : BOM=none; bytes=3413
+backup_20260911_002456\src\main\java\com\example\demo\controller\HelloController.java : BOM=none; bytes=2585
+backup_20260911_002456\src\main\java\com\example\demo\controller\UserController.java : BOM=none; bytes=2358
+backup_20260911_002456\src\main\java\com\example\demo\dto\AuthenticationRequest.java : BOM=none; bytes=409
+backup_20260911_002456\src\main\java\com\example\demo\dto\AuthResponse.java : BOM=none; bytes=373
+backup_20260911_002456\src\main\java\com\example\demo\dto\LoginRequest.java : BOM=none; bytes=334
+backup_20260911_002456\src\main\java\com\example\demo\dto\LoginResponseDto.java : BOM=none; bytes=292
+backup_20260911_002456\src\main\java\com\example\demo\dto\RefreshTokenRequest.java : BOM=none; bytes=221
+backup_20260911_002456\src\main\java\com\example\demo\dto\TokenResponse.java : BOM=none; bytes=476
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserDTO.java : BOM=none; bytes=618
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserRegistrationDto.java : BOM=none; bytes=1131
+backup_20260911_002456\src\main\java\com\example\demo\dto\UserResponseDto.java : BOM=none; bytes=455
+backup_20260911_002456\src\main\java\com\example\demo\exception\ApiErrorResponse.java : BOM=none; bytes=885
+backup_20260911_002456\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java : BOM=none; bytes=201
+backup_20260911_002456\src\main\java\com\example\demo\exception\ErrorDetails.java : BOM=none; bytes=731
+backup_20260911_002456\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java : BOM=none; bytes=3280
+backup_20260911_002456\src\main\java\com\example\demo\exception\ResourceNotFoundException.java : BOM=none; bytes=436
+backup_20260911_002456\src\main\java\com\example\demo\model\RefreshToken.java : BOM=none; bytes=727
+backup_20260911_002456\src\main\java\com\example\demo\model\Role.java : BOM=none; bytes=90
+backup_20260911_002456\src\main\java\com\example\demo\model\User.java : BOM=none; bytes=2979
+backup_20260911_002456\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : BOM=none; bytes=1240
+backup_20260911_002456\src\main\java\com\example\demo\repository\UserRepository.java : BOM=none; bytes=779
+backup_20260911_002456\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java : BOM=none; bytes=1475
+backup_20260911_002456\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java : BOM=none; bytes=1484
+backup_20260911_002456\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java : BOM=none; bytes=3755
+backup_20260911_002456\src\main\java\com\example\demo\security\JwtService.java : BOM=none; bytes=2719
+backup_20260911_002456\src\main\java\com\example\demo\security\SecurityConfig.java : BOM=none; bytes=2995
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java : BOM=none; bytes=3765
+backup_20260911_002456\src\main\java\com\example\demo\service\UserService.java : BOM=none; bytes=2785
+backup_20260911_002456\src\main\resources\application.properties : BOM=none; bytes=982
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=12130
+backup_20260911_002456\src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4306
+backup_20260911_002456\src\test\java\com\example\demo\service\UserServiceTest.java : BOM=none; bytes=1699
+backup_audit_20260917_235949\src\main\java\com\example\demo\DemoApplication.java : BOM=none; bytes=305
+backup_audit_20260917_235949\src\main\java\com\example\demo\GreetingService.java : BOM=none; bytes=246
+backup_audit_20260917_235949\src\main\java\com\example\demo\MessageService.java : BOM=none; bytes=974
+backup_audit_20260917_235949\src\main\java\com\example\demo\requests : BOM=none; bytes=686
+backup_audit_20260917_235949\src\main\java\com\example\demo\config\ApplicationConfig.java : BOM=none; bytes=1843
+backup_audit_20260917_235949\src\main\java\com\example\demo\config\OpenApiConfig.java : BOM=none; bytes=1445
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java : BOM=none; bytes=2807
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\HelloController.java : BOM=none; bytes=2585
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\UserController.java : BOM=none; bytes=2939
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\AuthenticationRequest.java : BOM=none; bytes=413
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\AuthResponse.java : BOM=none; bytes=523
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\ErrorResponse.java : BOM=none; bytes=1207
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\LoginRequest.java : BOM=none; bytes=334
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\LoginResponseDto.java : BOM=none; bytes=292
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\RefreshTokenRequest.java : BOM=none; bytes=212
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\TokenResponse.java : BOM=none; bytes=616
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserDTO.java : BOM=none; bytes=533
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserRegistrationDto.java : BOM=none; bytes=1287
+backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserResponseDto.java : BOM=none; bytes=455
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ApiErrorResponse.java : BOM=none; bytes=676
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java : BOM=none; bytes=201
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ErrorDetails.java : BOM=none; bytes=886
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java : BOM=none; bytes=9968
+backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ResourceNotFoundException.java : BOM=none; bytes=544
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\RefreshToken.java : BOM=none; bytes=724
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\Role.java : BOM=none; bytes=90
+backup_audit_20260917_235949\src\main\java\com\example\demo\model\User.java : BOM=none; bytes=2471
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : BOM=none; bytes=1633
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\UserRepository.java : BOM=none; bytes=1100
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java : BOM=none; bytes=2215
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java : BOM=none; bytes=1831
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java : BOM=none; bytes=3427
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtService.java : BOM=none; bytes=2874
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\SecurityConfig.java : BOM=none; bytes=4909
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedToken.java : BOM=none; bytes=1071
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java : BOM=none; bytes=289
+backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\TokenRevocationService.java : BOM=none; bytes=842
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java : BOM=none; bytes=4389
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\UserService.java : BOM=none; bytes=3097
+backup_audit_20260917_235949\src\main\resources\application.properties : BOM=none; bytes=849
+backup_audit_20260917_235949\src\test\java\com\example\demo\AuthIntegrationTest.java : BOM=none; bytes=5281
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=11604
+backup_audit_20260917_235949\src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4213
+backup_audit_20260917_235949\src\test\java\com\example\demo\service\UserServiceTest.java : BOM=none; bytes=1643
+backup_pre_fix\application.properties : BOM=none; bytes=923
+backup_pre_fix\schema.sql : BOM=none; bytes=200
+backup_pre_fix\20260918-120144\pom.xml : BOM=none; bytes=5686
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\model\RefreshToken.java : BOM=none; bytes=724
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : BOM=none; bytes=1633
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedToken.java : BOM=none; bytes=1071
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java : BOM=none; bytes=364
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java : BOM=none; bytes=1439
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java : BOM=none; bytes=4389
+backup_pre_fix\20260918-120144\src\main\resources\application.properties : BOM=none; bytes=923
+backup_pre_fix\20260918-120144\src\main\resources\schema.sql : BOM=none; bytes=200
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=11604
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4213
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java : BOM=none; bytes=2931
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\DemoApplication.java : BOM=none; bytes=305
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\GreetingService.java : BOM=none; bytes=246
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\MessageService.java : BOM=none; bytes=559
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\ApplicationConfig.java : BOM=none; bytes=1889
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\OpenApiConfig.java : BOM=none; bytes=815
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\AuthController.java : BOM=none; bytes=1904
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\HelloController.java : BOM=none; bytes=1503
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\UserController.java : BOM=none; bytes=1565
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\AuthenticationRequest.java : BOM=none; bytes=409
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\AuthResponse.java : BOM=none; bytes=214
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\LoginRequest.java : BOM=none; bytes=334
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\LoginResponseDto.java : BOM=none; bytes=292
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserDTO.java : BOM=none; bytes=618
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserRegistrationDto.java : BOM=none; bytes=721
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserResponseDto.java : BOM=none; bytes=455
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ApiErrorResponse.java : BOM=none; bytes=885
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java : BOM=none; bytes=201
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ErrorDetails.java : BOM=none; bytes=731
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java : BOM=none; bytes=3280
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ResourceNotFoundException.java : BOM=none; bytes=436
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\Role.java : BOM=none; bytes=90
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\User.java : BOM=none; bytes=1922
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\repository\UserRepository.java : BOM=none; bytes=779
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java : BOM=none; bytes=1508
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java : BOM=none; bytes=1513
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java : BOM=none; bytes=3755
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtService.java : BOM=none; bytes=2719
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\SecurityConfig.java : BOM=none; bytes=2633
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\service\UserService.java : BOM=none; bytes=3454
+backup_pre_fix_20260907_195917\src\main\resources\application.properties : BOM=none; bytes=949
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=8739
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4306
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\service\UserServiceTest.java : BOM=none; bytes=1986
+src\main\java\com\example\demo\DemoApplication.java : BOM=none; bytes=391
+src\main\java\com\example\demo\GreetingService.java : BOM=none; bytes=246
+src\main\java\com\example\demo\MessageService.java : BOM=none; bytes=974
+src\main\java\com\example\demo\requests : BOM=none; bytes=686
+src\main\java\com\example\demo\config\ApplicationConfig.java : BOM=none; bytes=1843
+src\main\java\com\example\demo\config\OpenApiConfig.java : BOM=none; bytes=1445
+src\main\java\com\example\demo\config\ShedLockConfig.java : BOM=none; bytes=840
+src\main\java\com\example\demo\controller\AuthController.java : BOM=none; bytes=2807
+src\main\java\com\example\demo\controller\HelloController.java : BOM=none; bytes=2585
+src\main\java\com\example\demo\controller\UserController.java : BOM=none; bytes=2939
+src\main\java\com\example\demo\dto\AuthenticationRequest.java : BOM=none; bytes=413
+src\main\java\com\example\demo\dto\AuthResponse.java : BOM=none; bytes=523
+src\main\java\com\example\demo\dto\ErrorResponse.java : BOM=none; bytes=1207
+src\main\java\com\example\demo\dto\LoginRequest.java : BOM=none; bytes=334
+src\main\java\com\example\demo\dto\LoginResponseDto.java : BOM=none; bytes=292
+src\main\java\com\example\demo\dto\RefreshTokenRequest.java : BOM=none; bytes=212
+src\main\java\com\example\demo\dto\TokenResponse.java : BOM=none; bytes=616
+src\main\java\com\example\demo\dto\UserDTO.java : BOM=none; bytes=533
+src\main\java\com\example\demo\dto\UserRegistrationDto.java : BOM=none; bytes=1287
+src\main\java\com\example\demo\dto\UserResponseDto.java : BOM=none; bytes=455
+src\main\java\com\example\demo\exception\ApiErrorResponse.java : BOM=none; bytes=676
+src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java : BOM=none; bytes=201
+src\main\java\com\example\demo\exception\ErrorDetails.java : BOM=none; bytes=886
+src\main\java\com\example\demo\exception\GlobalExceptionHandler.java : BOM=none; bytes=9968
+src\main\java\com\example\demo\exception\ResourceNotFoundException.java : BOM=none; bytes=544
+src\main\java\com\example\demo\model\RefreshToken.java : BOM=none; bytes=724
+src\main\java\com\example\demo\model\Role.java : BOM=none; bytes=90
+src\main\java\com\example\demo\model\User.java : BOM=none; bytes=2471
+src\main\java\com\example\demo\repository\RefreshTokenRepository.java : BOM=none; bytes=1633
+src\main\java\com\example\demo\repository\UserRepository.java : BOM=none; bytes=1100
+src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java : BOM=none; bytes=2215
+src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java : BOM=none; bytes=1831
+src\main\java\com\example\demo\security\JwtAuthenticationFilter.java : BOM=none; bytes=3427
+src\main\java\com\example\demo\security\JwtService.java : BOM=none; bytes=2874
+src\main\java\com\example\demo\security\SecurityConfig.java : BOM=none; bytes=3380
+src\main\java\com\example\demo\security\token\RevokedToken.java : BOM=none; bytes=1071
+src\main\java\com\example\demo\security\token\RevokedTokenRepository.java : BOM=none; bytes=718
+src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java : BOM=none; bytes=1439
+src\main\java\com\example\demo\security\token\TokenRevocationService.java : BOM=none; bytes=842
+src\main\java\com\example\demo\service\RefreshTokenService.java : BOM=none; bytes=3870
+src\main\java\com\example\demo\service\UserService.java : BOM=none; bytes=3097
+src\main\resources\application.properties : BOM=none; bytes=1164
+src\main\resources\schema.sql : BOM=none; bytes=1167
+src\main\resources\schema.sql.bak : BOM=none; bytes=721
+src\test\java\com\example\demo\ActuatorSecurityIntegrationTest.java : BOM=none; bytes=2752
+src\test\java\com\example\demo\AuthIntegrationTest.java : BOM=none; bytes=5281
+src\test\java\com\example\demo\SecurityIntegrationTest.java : BOM=none; bytes=11604
+src\test\java\com\example\demo\UserValidationIntegrationTest.java : BOM=none; bytes=4213
+src\test\java\com\example\demo\controller\AuthControllerIntegrationTest.java : BOM=none; bytes=6257
+src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java : BOM=none; bytes=2061
+src\test\java\com\example\demo\service\UserServiceTest.java : BOM=none; bytes=1643
+src\test\resources\application.properties : BOM=none; bytes=337
+src\test\resources\schema.sql : BOM=none; bytes=1167
+tools\project-audit.ps1 : BOM=none; bytes=0
+_diagnostics\mvn_test_20260918_122815.log : BOM=UTF-16 LE; bytes=218190
+
+--- Duplicate Java type names ---
+DemoApplication: backups\backup_20260915_003254\src\main\java\com\example\demo\DemoApplication.java, backup_20260911_002239\src\main\java\com\example\demo\DemoApplication.java, backup_20260911_002456\src\main\java\com\example\demo\DemoApplication.java, backup_audit_20260917_235949\src\main\java\com\example\demo\DemoApplication.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\DemoApplication.java, src\main\java\com\example\demo\DemoApplication.java
+GreetingService: backups\backup_20260915_003254\src\main\java\com\example\demo\GreetingService.java, backup_20260911_002239\src\main\java\com\example\demo\GreetingService.java, backup_20260911_002456\src\main\java\com\example\demo\GreetingService.java, backup_audit_20260917_235949\src\main\java\com\example\demo\GreetingService.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\GreetingService.java, src\main\java\com\example\demo\GreetingService.java
+MessageService: backups\backup_20260915_003254\src\main\java\com\example\demo\MessageService.java, backup_20260911_002239\src\main\java\com\example\demo\MessageService.java, backup_20260911_002456\src\main\java\com\example\demo\MessageService.java, backup_audit_20260917_235949\src\main\java\com\example\demo\MessageService.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\MessageService.java, src\main\java\com\example\demo\MessageService.java
+ApplicationConfig: backups\backup_20260915_003254\src\main\java\com\example\demo\config\ApplicationConfig.java, backup_20260911_002239\src\main\java\com\example\demo\config\ApplicationConfig.java, backup_20260911_002456\src\main\java\com\example\demo\config\ApplicationConfig.java, backup_audit_20260917_235949\src\main\java\com\example\demo\config\ApplicationConfig.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\ApplicationConfig.java, src\main\java\com\example\demo\config\ApplicationConfig.java
+OpenApiConfig: backups\backup_20260915_003254\src\main\java\com\example\demo\config\OpenApiConfig.java, backup_20260911_002239\src\main\java\com\example\demo\config\OpenApiConfig.java, backup_20260911_002456\src\main\java\com\example\demo\config\OpenApiConfig.java, backup_audit_20260917_235949\src\main\java\com\example\demo\config\OpenApiConfig.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\config\OpenApiConfig.java, src\main\java\com\example\demo\config\OpenApiConfig.java
+AuthController: backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java, backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java, backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java, backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\AuthController.java, src\main\java\com\example\demo\controller\AuthController.java
+HelloController: backups\backup_20260915_003254\src\main\java\com\example\demo\controller\HelloController.java, backup_20260911_002239\src\main\java\com\example\demo\controller\HelloController.java, backup_20260911_002456\src\main\java\com\example\demo\controller\HelloController.java, backup_audit_20260917_235949\src\main\java\com\example\demo\controller\HelloController.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\HelloController.java, src\main\java\com\example\demo\controller\HelloController.java
+UserController: backups\backup_20260915_003254\src\main\java\com\example\demo\controller\UserController.java, backup_20260911_002239\src\main\java\com\example\demo\controller\UserController.java, backup_20260911_002456\src\main\java\com\example\demo\controller\UserController.java, backup_audit_20260917_235949\src\main\java\com\example\demo\controller\UserController.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\UserController.java, src\main\java\com\example\demo\controller\UserController.java
+UserDTO: backups\backup_20260915_003254\src\main\java\com\example\demo\dto\UserDTO.java, backup_20260911_002239\src\main\java\com\example\demo\dto\UserDTO.java, backup_20260911_002456\src\main\java\com\example\demo\dto\UserDTO.java, backup_audit_20260917_235949\src\main\java\com\example\demo\dto\UserDTO.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\dto\UserDTO.java, src\main\java\com\example\demo\dto\UserDTO.java
+ApiErrorResponse: backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ApiErrorResponse.java, backup_20260911_002239\src\main\java\com\example\demo\exception\ApiErrorResponse.java, backup_20260911_002456\src\main\java\com\example\demo\exception\ApiErrorResponse.java, backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ApiErrorResponse.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ApiErrorResponse.java, src\main\java\com\example\demo\exception\ApiErrorResponse.java
+EmailAlreadyExistsException: backups\backup_20260915_003254\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java, backup_20260911_002239\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java, backup_20260911_002456\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java, backup_audit_20260917_235949\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java, src\main\java\com\example\demo\exception\EmailAlreadyExistsException.java
+ErrorDetails: backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ErrorDetails.java, backup_20260911_002239\src\main\java\com\example\demo\exception\ErrorDetails.java, backup_20260911_002456\src\main\java\com\example\demo\exception\ErrorDetails.java, backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ErrorDetails.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ErrorDetails.java, src\main\java\com\example\demo\exception\ErrorDetails.java
+GlobalExceptionHandler: backups\backup_20260915_003254\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java, backup_20260911_002239\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java, backup_20260911_002456\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java, backup_audit_20260917_235949\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\GlobalExceptionHandler.java, src\main\java\com\example\demo\exception\GlobalExceptionHandler.java
+ResourceNotFoundException: backups\backup_20260915_003254\src\main\java\com\example\demo\exception\ResourceNotFoundException.java, backup_20260911_002239\src\main\java\com\example\demo\exception\ResourceNotFoundException.java, backup_20260911_002456\src\main\java\com\example\demo\exception\ResourceNotFoundException.java, backup_audit_20260917_235949\src\main\java\com\example\demo\exception\ResourceNotFoundException.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\exception\ResourceNotFoundException.java, src\main\java\com\example\demo\exception\ResourceNotFoundException.java
+RefreshToken: backups\backup_20260915_003254\src\main\java\com\example\demo\model\RefreshToken.java, backup_20260911_002239\src\main\java\com\example\demo\model\RefreshToken.java, backup_20260911_002456\src\main\java\com\example\demo\model\RefreshToken.java, backup_audit_20260917_235949\src\main\java\com\example\demo\model\RefreshToken.java, backup_pre_fix\20260918-120144\src\main\java\com\example\demo\model\RefreshToken.java, src\main\java\com\example\demo\model\RefreshToken.java
+Role: backups\backup_20260915_003254\src\main\java\com\example\demo\model\Role.java, backup_20260911_002239\src\main\java\com\example\demo\model\Role.java, backup_20260911_002456\src\main\java\com\example\demo\model\Role.java, backup_audit_20260917_235949\src\main\java\com\example\demo\model\Role.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\Role.java, src\main\java\com\example\demo\model\Role.java
+User: backups\backup_20260915_003254\src\main\java\com\example\demo\model\User.java, backup_20260911_002239\src\main\java\com\example\demo\model\User.java, backup_20260911_002456\src\main\java\com\example\demo\model\User.java, backup_audit_20260917_235949\src\main\java\com\example\demo\model\User.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\model\User.java, src\main\java\com\example\demo\model\User.java
+RefreshTokenRepository: backups\backup_20260915_003254\src\main\java\com\example\demo\repository\RefreshTokenRepository.java, backup_20260911_002239\src\main\java\com\example\demo\repository\RefreshTokenRepository.java, backup_20260911_002456\src\main\java\com\example\demo\repository\RefreshTokenRepository.java, backup_audit_20260917_235949\src\main\java\com\example\demo\repository\RefreshTokenRepository.java, backup_pre_fix\20260918-120144\src\main\java\com\example\demo\repository\RefreshTokenRepository.java, src\main\java\com\example\demo\repository\RefreshTokenRepository.java
+UserRepository: backups\backup_20260915_003254\src\main\java\com\example\demo\repository\UserRepository.java, backup_20260911_002239\src\main\java\com\example\demo\repository\UserRepository.java, backup_20260911_002456\src\main\java\com\example\demo\repository\UserRepository.java, backup_audit_20260917_235949\src\main\java\com\example\demo\repository\UserRepository.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\repository\UserRepository.java, src\main\java\com\example\demo\repository\UserRepository.java
+CustomAccessDeniedHandler: backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java, backup_20260911_002239\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java, backup_20260911_002456\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java, backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java, src\main\java\com\example\demo\security\CustomAccessDeniedHandler.java
+CustomAuthenticationEntryPoint: backups\backup_20260915_003254\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java, backup_20260911_002239\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java, backup_20260911_002456\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java, backup_audit_20260917_235949\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java, src\main\java\com\example\demo\security\CustomAuthenticationEntryPoint.java
+JwtAuthenticationFilter: backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java, backup_20260911_002239\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java, backup_20260911_002456\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java, backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtAuthenticationFilter.java, src\main\java\com\example\demo\security\JwtAuthenticationFilter.java
+JwtService: backups\backup_20260915_003254\src\main\java\com\example\demo\security\JwtService.java, backup_20260911_002239\src\main\java\com\example\demo\security\JwtService.java, backup_20260911_002456\src\main\java\com\example\demo\security\JwtService.java, backup_audit_20260917_235949\src\main\java\com\example\demo\security\JwtService.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\JwtService.java, src\main\java\com\example\demo\security\JwtService.java
+SecurityConfig: backups\backup_20260915_003254\src\main\java\com\example\demo\security\SecurityConfig.java, backup_20260911_002239\src\main\java\com\example\demo\security\SecurityConfig.java, backup_20260911_002456\src\main\java\com\example\demo\security\SecurityConfig.java, backup_audit_20260917_235949\src\main\java\com\example\demo\security\SecurityConfig.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\security\SecurityConfig.java, src\main\java\com\example\demo\security\SecurityConfig.java
+RefreshTokenService: backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java, backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java, backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java, backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java, backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java, src\main\java\com\example\demo\service\RefreshTokenService.java
+UserService: backups\backup_20260915_003254\src\main\java\com\example\demo\service\UserService.java, backup_20260911_002239\src\main\java\com\example\demo\service\UserService.java, backup_20260911_002456\src\main\java\com\example\demo\service\UserService.java, backup_audit_20260917_235949\src\main\java\com\example\demo\service\UserService.java, backup_pre_fix_20260907_195917\src\main\java\com\example\demo\service\UserService.java, src\main\java\com\example\demo\service\UserService.java
+AuthIntegrationTest: backups\backup_20260915_003254\src\test\java\com\example\demo\AuthIntegrationTest.java, backup_audit_20260917_235949\src\test\java\com\example\demo\AuthIntegrationTest.java, src\test\java\com\example\demo\AuthIntegrationTest.java
+SecurityIntegrationTest: backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java, backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java, backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java, backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java, backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java, backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java, src\test\java\com\example\demo\SecurityIntegrationTest.java
+UserValidationIntegrationTest: backups\backup_20260915_003254\src\test\java\com\example\demo\UserValidationIntegrationTest.java, backup_20260911_002239\src\test\java\com\example\demo\UserValidationIntegrationTest.java, backup_20260911_002456\src\test\java\com\example\demo\UserValidationIntegrationTest.java, backup_audit_20260917_235949\src\test\java\com\example\demo\UserValidationIntegrationTest.java, backup_pre_fix\20260918-120144\src\test\java\com\example\demo\UserValidationIntegrationTest.java, backup_pre_fix_20260907_195917\src\test\java\com\example\demo\UserValidationIntegrationTest.java, src\test\java\com\example\demo\UserValidationIntegrationTest.java
+UserServiceTest: backups\backup_20260915_003254\src\test\java\com\example\demo\service\UserServiceTest.java, backup_20260911_002239\src\test\java\com\example\demo\service\UserServiceTest.java, backup_20260911_002456\src\test\java\com\example\demo\service\UserServiceTest.java, backup_audit_20260917_235949\src\test\java\com\example\demo\service\UserServiceTest.java, backup_pre_fix_20260907_195917\src\test\java\com\example\demo\service\UserServiceTest.java, src\test\java\com\example\demo\service\UserServiceTest.java
+RevokedToken: backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedToken.java, backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedToken.java, src\main\java\com\example\demo\security\token\RevokedToken.java
+RevokedTokenRepository: backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java, backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\RevokedTokenRepository.java, src\main\java\com\example\demo\security\token\RevokedTokenRepository.java
+TokenRevocationService: backup_audit_20260917_235949\src\main\java\com\example\demo\security\token\TokenRevocationService.java, src\main\java\com\example\demo\security\token\TokenRevocationService.java
+TokenCleanupScheduler: backup_pre_fix\20260918-120144\src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java, src\main\java\com\example\demo\security\token\TokenCleanupScheduler.java
+TokenCleanupSchedulerIntegrationTest: backup_pre_fix\20260918-120144\src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java, src\test\java\com\example\demo\security\token\TokenCleanupSchedulerIntegrationTest.java
+
+--- Possible hard-coded credentials (values suppressed) ---
+docker-compose.yml : line 14 (possible credential; line value suppressed)
+docker-compose.yml : line 27 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java : line 42 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java : line 43 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java : line 52 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\controller\AuthController.java : line 54 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : line 22 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java : line 26 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java : line 39 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java : line 54 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\main\java\com\example\demo\service\RefreshTokenService.java : line 75 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\AuthIntegrationTest.java : line 78 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\AuthIntegrationTest.java : line 79 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 133 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 160 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 184 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 205 (possible credential; line value suppressed)
+backups\backup_20260915_003254\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 215 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java : line 40 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java : line 41 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java : line 51 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\controller\AuthController.java : line 53 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\model\User.java : line 47 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\model\User.java : line 53 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : line 22 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java : line 26 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java : line 39 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java : line 54 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\java\com\example\demo\service\RefreshTokenService.java : line 75 (possible credential; line value suppressed)
+backup_20260911_002239\src\main\resources\application.properties : line 5 (possible credential; line value suppressed)
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 56 (possible credential; line value suppressed)
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 137 (possible credential; line value suppressed)
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 165 (possible credential; line value suppressed)
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 189 (possible credential; line value suppressed)
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 201 (possible credential; line value suppressed)
+backup_20260911_002239\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 216 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java : line 40 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java : line 41 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java : line 51 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\controller\AuthController.java : line 53 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\model\User.java : line 47 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\model\User.java : line 53 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : line 22 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java : line 26 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java : line 39 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java : line 54 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\java\com\example\demo\service\RefreshTokenService.java : line 75 (possible credential; line value suppressed)
+backup_20260911_002456\src\main\resources\application.properties : line 5 (possible credential; line value suppressed)
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 56 (possible credential; line value suppressed)
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 137 (possible credential; line value suppressed)
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 165 (possible credential; line value suppressed)
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 189 (possible credential; line value suppressed)
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 201 (possible credential; line value suppressed)
+backup_20260911_002456\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 216 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java : line 42 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java : line 43 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java : line 52 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\controller\AuthController.java : line 54 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : line 22 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java : line 26 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java : line 39 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java : line 54 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\main\java\com\example\demo\service\RefreshTokenService.java : line 75 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\AuthIntegrationTest.java : line 78 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\AuthIntegrationTest.java : line 79 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 133 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 160 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 184 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 205 (possible credential; line value suppressed)
+backup_audit_20260917_235949\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 215 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\repository\RefreshTokenRepository.java : line 22 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java : line 26 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java : line 39 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java : line 54 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\main\java\com\example\demo\service\RefreshTokenService.java : line 75 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 133 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 160 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 184 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 205 (possible credential; line value suppressed)
+backup_pre_fix\20260918-120144\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 215 (possible credential; line value suppressed)
+backup_pre_fix_20260907_195917\src\main\java\com\example\demo\controller\AuthController.java : line 44 (possible credential; line value suppressed)
+backup_pre_fix_20260907_195917\src\main\resources\application.properties : line 5 (possible credential; line value suppressed)
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 123 (possible credential; line value suppressed)
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 153 (possible credential; line value suppressed)
+backup_pre_fix_20260907_195917\src\test\java\com\example\demo\SecurityIntegrationTest.java : line 180 (possible credential; line value suppressed)
+src\main\java\com\example\demo\controller\AuthController.java : line 42 (possible credential; line value suppressed)
+src\main\java\com\example\demo\controller\AuthController.java : line 43 (possible credential; line value suppressed)
+src\main\java\com\example\demo\controller\AuthController.java : line 52 (possible credential; line value suppressed)
+src\main\java\com\example\demo\controller\AuthController.java : line 54 (possible credential; line value suppressed)
+src\main\java\com\example\demo\repository\RefreshTokenRepository.java : line 22 (possible credential; line value suppressed)
+src\main\java\com\example\demo\service\RefreshTokenService.java : line 26 (possible credential; line value suppressed)
+src\main\java\com\example\demo\service\RefreshTokenService.java : line 38 (possible credential; line value suppressed)
+src\main\java\com\example\demo\service\RefreshTokenService.java : line 58 (possible credential; line value suppressed)
+src\main\java\com\example\demo\service\RefreshTokenService.java : line 75 (possible credential; line value suppressed)
+src\main\java\com\example\demo\service\RefreshTokenService.java : line 87 (possible credential; line value suppressed)
+src\test\java\com\example\demo\AuthIntegrationTest.java : line 78 (possible credential; line value suppressed)
+src\test\java\com\example\demo\AuthIntegrationTest.java : line 79 (possible credential; line value suppressed)
+src\test\java\com\example\demo\SecurityIntegrationTest.java : line 133 (possible credential; line value suppressed)
+src\test\java\com\example\demo\SecurityIntegrationTest.java : line 160 (possible credential; line value suppressed)
+src\test\java\com\example\demo\SecurityIntegrationTest.java : line 184 (possible credential; line value suppressed)
+src\test\java\com\example\demo\SecurityIntegrationTest.java : line 205 (possible credential; line value suppressed)
+src\test\java\com\example\demo\SecurityIntegrationTest.java : line 215 (possible credential; line value suppressed)
+src\test\java\com\example\demo\controller\AuthControllerIntegrationTest.java : line 49 (possible credential; line value suppressed)
+src\test\java\com\example\demo\controller\AuthControllerIntegrationTest.java : line 94 (possible credential; line value suppressed)
+
+--- clean compile ---
+Exit code: 0
+
+--- test ---
+Exit code: 1
+
+--- Git ---
+Current branch: feature/observability-actuator
+MM src/main/resources/application.properties
+M  src/test/java/com/example/demo/ActuatorSecurityIntegrationTest.java
+MM src/test/resources/application.properties
+?? analysis-report-20260925_204522.txt
+?? analyze-and-build.sh
+?? diagnose-report-20260926-005832.txt
+?? diagnose.ps1
+
+No files were staged, committed, or pushed by this script.
+
+Finished: 2026-09-26T01:08:18.1666612+03:30
