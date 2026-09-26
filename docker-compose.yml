@@ -11,7 +11,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service_db
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: GAPGPTMASKTOKENjayeb7pnwlX7X # یکسان با رمز Postgres
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_DB: user_service_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: GAPGPTMASKTOKENjayeb7pnwlX8X # یکسان با رمز برنامه
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d user_service_db"]
       interval: 5s
