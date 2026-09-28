@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getCurrentUser(Principal principal) {
-        // Ø­Ø§Ù„Ø§ Ø§Ø² Ø·Ø±ÛŒÙ‚ Ø§ÛŒÙ…ÛŒÙ„Ù Ù…ÙˆØ¬ÙˆØ¯ Ø¯Ø± ØªÙˆÚ©Ù† (Principal)ØŒ Ø¯ÛŒØªØ§ÛŒ ØªØ§Ø²Ù‡ Ø±Ø§ Ø§Ø² Ø¯ÛŒØªØ§Ø¨ÛŒØ³ Ù…ÛŒâ€ŒÚ¯ÛŒØ±ÛŒÙ…
+        // Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§ Ã˜Â§Ã˜Â² Ã˜Â·Ã˜Â±Ã›Å’Ã™â€š Ã˜Â§Ã›Å’Ã™â€¦Ã›Å’Ã™â€žÃ™Â Ã™â€¦Ã™Ë†Ã˜Â¬Ã™Ë†Ã˜Â¯ Ã˜Â¯Ã˜Â± Ã˜ÂªÃ™Ë†ÃšÂ©Ã™â€  (Principal)Ã˜Å’ Ã˜Â¯Ã›Å’Ã˜ÂªÃ˜Â§Ã›Å’ Ã˜ÂªÃ˜Â§Ã˜Â²Ã™â€¡ Ã˜Â±Ã˜Â§ Ã˜Â§Ã˜Â² Ã˜Â¯Ã›Å’Ã˜ÂªÃ˜Â§Ã˜Â¨Ã›Å’Ã˜Â³ Ã™â€¦Ã›Å’Ã¢â‚¬Å’ÃšÂ¯Ã›Å’Ã˜Â±Ã›Å’Ã™â€¦
         User currentUser = userService.getUserByEmail(principal.getName());
         return ResponseEntity.ok(UserResponseDto.fromEntity(currentUser));
     }

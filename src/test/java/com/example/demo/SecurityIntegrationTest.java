@@ -60,14 +60,14 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("Ø¯Ø³ØªØ±Ø³ÛŒ Ø¨Ø¯ÙˆÙ† ØªÙˆÚ©Ù† Ø¨Ù‡ Ø§Ù†Ø¯Ù¾ÙˆÛŒÙ†Øª Ù…Ø­Ø§ÙØ¸Øªâ€ŒØ´Ø¯Ù‡ Ø¨Ø§ÛŒØ¯ 401 Ø¨Ø±Ú¯Ø±Ø¯Ø§Ù†Ø¯")
+    @DisplayName("Ã˜Â¯Ã˜Â³Ã˜ÂªÃ˜Â±Ã˜Â³Ã›Å’ Ã˜Â¨Ã˜Â¯Ã™Ë†Ã™â€  Ã˜ÂªÃ™Ë†ÃšÂ©Ã™â€  Ã˜Â¨Ã™â€¡ Ã˜Â§Ã™â€ Ã˜Â¯Ã™Â¾Ã™Ë†Ã›Å’Ã™â€ Ã˜Âª Ã™â€¦Ã˜Â­Ã˜Â§Ã™ÂÃ˜Â¸Ã˜ÂªÃ¢â‚¬Å’Ã˜Â´Ã˜Â¯Ã™â€¡ Ã˜Â¨Ã˜Â§Ã›Å’Ã˜Â¯ 401 Ã˜Â¨Ã˜Â±ÃšÂ¯Ã˜Â±Ã˜Â¯Ã˜Â§Ã™â€ Ã˜Â¯")
     void shouldReturn401WhenUnauthorized() throws Exception {
         mockMvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("Ø«Ø¨Øªâ€ŒÙ†Ø§Ù… Ú©Ø§Ø±Ø¨Ø± Ø¬Ø¯ÛŒØ¯ Ø¨Ø§ Ø¯Ø§Ø¯Ù‡â€ŒÙ‡Ø§ÛŒ Ù…Ø¹ØªØ¨Ø± Ø¨Ø§ÛŒØ¯ Ù…ÙˆÙÙ‚ÛŒØªâ€ŒØ¢Ù…ÛŒØ² Ø¨Ø§Ø´Ø¯")
+    @DisplayName("Ã˜Â«Ã˜Â¨Ã˜ÂªÃ¢â‚¬Å’Ã™â€ Ã˜Â§Ã™â€¦ ÃšÂ©Ã˜Â§Ã˜Â±Ã˜Â¨Ã˜Â± Ã˜Â¬Ã˜Â¯Ã›Å’Ã˜Â¯ Ã˜Â¨Ã˜Â§ Ã˜Â¯Ã˜Â§Ã˜Â¯Ã™â€¡Ã¢â‚¬Å’Ã™â€¡Ã˜Â§Ã›Å’ Ã™â€¦Ã˜Â¹Ã˜ÂªÃ˜Â¨Ã˜Â± Ã˜Â¨Ã˜Â§Ã›Å’Ã˜Â¯ Ã™â€¦Ã™Ë†Ã™ÂÃ™â€šÃ›Å’Ã˜ÂªÃ¢â‚¬Å’Ã˜Â¢Ã™â€¦Ã›Å’Ã˜Â² Ã˜Â¨Ã˜Â§Ã˜Â´Ã˜Â¯")
     void shouldRegisterUserSuccessfully() throws Exception {
         String userJson = """
                 {
@@ -85,7 +85,7 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("Ø«Ø¨Øªâ€ŒÙ†Ø§Ù… Ø¨Ø§ Ø§ÛŒÙ…ÛŒÙ„ ØªÚ©Ø±Ø§Ø±ÛŒ Ø¨Ø§ÛŒØ¯ Ø¨Ø§ Ø®Ø·Ø§ÛŒ 409 Ù…ÙˆØ§Ø¬Ù‡ Ø´ÙˆØ¯")
+    @DisplayName("Ã˜Â«Ã˜Â¨Ã˜ÂªÃ¢â‚¬Å’Ã™â€ Ã˜Â§Ã™â€¦ Ã˜Â¨Ã˜Â§ Ã˜Â§Ã›Å’Ã™â€¦Ã›Å’Ã™â€ž Ã˜ÂªÃšÂ©Ã˜Â±Ã˜Â§Ã˜Â±Ã›Å’ Ã˜Â¨Ã˜Â§Ã›Å’Ã˜Â¯ Ã˜Â¨Ã˜Â§ Ã˜Â®Ã˜Â·Ã˜Â§Ã›Å’ 409 Ã™â€¦Ã™Ë†Ã˜Â§Ã˜Â¬Ã™â€¡ Ã˜Â´Ã™Ë†Ã˜Â¯")
     void shouldFailWhenRegisteringDuplicateEmail() throws Exception {
         User existingUser = User.builder()
                 .name("Existing")
@@ -110,7 +110,7 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("Ø¯Ø³ØªØ±Ø³ÛŒ Ø¨Ù‡ Ø§Ù†Ø¯Ù¾ÙˆÛŒÙ†Øª Ù…Ø­Ø§ÙØ¸Øªâ€ŒØ´Ø¯Ù‡ Ø¨Ø§ ØªÙˆÚ©Ù† Ù…Ø¹ØªØ¨Ø± JWT")
+    @DisplayName("Ã˜Â¯Ã˜Â³Ã˜ÂªÃ˜Â±Ã˜Â³Ã›Å’ Ã˜Â¨Ã™â€¡ Ã˜Â§Ã™â€ Ã˜Â¯Ã™Â¾Ã™Ë†Ã›Å’Ã™â€ Ã˜Âª Ã™â€¦Ã˜Â­Ã˜Â§Ã™ÂÃ˜Â¸Ã˜ÂªÃ¢â‚¬Å’Ã˜Â´Ã˜Â¯Ã™â€¡ Ã˜Â¨Ã˜Â§ Ã˜ÂªÃ™Ë†ÃšÂ©Ã™â€  Ã™â€¦Ã˜Â¹Ã˜ÂªÃ˜Â¨Ã˜Â± JWT")
     void shouldAccessProtectedEndpointWithValidJwtToken() throws Exception {
         UserRegistrationDto registrationDto = new UserRegistrationDto(
                 "Jovan Admin",
@@ -204,17 +204,17 @@ public class SecurityIntegrationTest {
 
         String firstRefreshToken = JsonPath.read(loginResult.getResponse().getContentAsString(), "$.refreshToken");
 
-        // 2. Act: Ù…Ø±Ø­Ù„Ù‡ Ø§ÙˆÙ„ Ø±ÙØ±Ø´
+        // 2. Act: Ã™â€¦Ã˜Â±Ã˜Â­Ã™â€žÃ™â€¡ Ã˜Â§Ã™Ë†Ã™â€ž Ã˜Â±Ã™ÂÃ˜Â±Ã˜Â´
         MvcResult firstRefreshResult = mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new RefreshTokenRequest(firstRefreshToken))))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // *** Ø§ÛŒÙ†Ø¬Ø§ Ø¨Ø³ÛŒØ§Ø± Ù…Ù‡Ù… Ø§Ø³Øª: Ø¨Ø§ÛŒØ¯ Ø§Ø¨ØªØ¯Ø§ ØªÙˆÚ©Ù† Ø¬Ø¯ÛŒØ¯ Ø±Ø§ Ø§Ø² Ù¾Ø§Ø³Ø®Ù Ù…Ø±Ø­Ù„Ù‡ Ø§ÙˆÙ„ Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ú©Ù†ÛŒ ***
+        // *** Ã˜Â§Ã›Å’Ã™â€ Ã˜Â¬Ã˜Â§ Ã˜Â¨Ã˜Â³Ã›Å’Ã˜Â§Ã˜Â± Ã™â€¦Ã™â€¡Ã™â€¦ Ã˜Â§Ã˜Â³Ã˜Âª: Ã˜Â¨Ã˜Â§Ã›Å’Ã˜Â¯ Ã˜Â§Ã˜Â¨Ã˜ÂªÃ˜Â¯Ã˜Â§ Ã˜ÂªÃ™Ë†ÃšÂ©Ã™â€  Ã˜Â¬Ã˜Â¯Ã›Å’Ã˜Â¯ Ã˜Â±Ã˜Â§ Ã˜Â§Ã˜Â² Ã™Â¾Ã˜Â§Ã˜Â³Ã˜Â®Ã™Â Ã™â€¦Ã˜Â±Ã˜Â­Ã™â€žÃ™â€¡ Ã˜Â§Ã™Ë†Ã™â€ž Ã˜Â§Ã˜Â³Ã˜ÂªÃ˜Â®Ã˜Â±Ã˜Â§Ã˜Â¬ ÃšÂ©Ã™â€ Ã›Å’ ***
         String secondRefreshToken = JsonPath.read(firstRefreshResult.getResponse().getContentAsString(), "$.refreshToken");
 
-        // 3. Act: Ù…Ø±Ø­Ù„Ù‡ Ø¯ÙˆÙ… Ø±ÙØ±Ø´ (Ø­Ø§Ù„Ø§ Ú©Ù‡ Ù…ØªØºÛŒØ± Ø¨Ø§Ù„Ø§ ØªØ¹Ø±ÛŒÙ Ø´Ø¯Ù‡ØŒ Ø§ÛŒÙ†Ø¬Ø§ Ù‚Ø±Ù…Ø² Ù†Ù…ÛŒâ€ŒØ´ÙˆØ¯)
+        // 3. Act: Ã™â€¦Ã˜Â±Ã˜Â­Ã™â€žÃ™â€¡ Ã˜Â¯Ã™Ë†Ã™â€¦ Ã˜Â±Ã™ÂÃ˜Â±Ã˜Â´ (Ã˜Â­Ã˜Â§Ã™â€žÃ˜Â§ ÃšÂ©Ã™â€¡ Ã™â€¦Ã˜ÂªÃ˜ÂºÃ›Å’Ã˜Â± Ã˜Â¨Ã˜Â§Ã™â€žÃ˜Â§ Ã˜ÂªÃ˜Â¹Ã˜Â±Ã›Å’Ã™Â Ã˜Â´Ã˜Â¯Ã™â€¡Ã˜Å’ Ã˜Â§Ã›Å’Ã™â€ Ã˜Â¬Ã˜Â§ Ã™â€šÃ˜Â±Ã™â€¦Ã˜Â² Ã™â€ Ã™â€¦Ã›Å’Ã¢â‚¬Å’Ã˜Â´Ã™Ë†Ã˜Â¯)
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new RefreshTokenRequest(secondRefreshToken))))

@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // در صورت بروز خطا در تجزیه توکن کانتکست خالی میماند و AuthenticationEntryPoint واکنش نشان میدهد
+            // Ø¯Ø± ØµÙˆØ±Øª Ø¨Ø±ÙˆØ² Ø®Ø·Ø§ Ø¯Ø± ØªØ¬Ø²ÛŒÙ‡ ØªÙˆÚ©Ù† Ú©Ø§Ù†ØªÚ©Ø³Øª Ø®Ø§Ù„ÛŒ Ù…ÛŒÙ…Ø§Ù†Ø¯ Ùˆ AuthenticationEntryPoint ÙˆØ§Ú©Ù†Ø´ Ù†Ø´Ø§Ù† Ù…ÛŒØ¯Ù‡Ø¯
         }
 
         filterChain.doFilter(request, response);

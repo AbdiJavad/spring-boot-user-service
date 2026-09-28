@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource; // <--- این Import را اضافه کن
+import org.springframework.test.context.TestPropertySource; // <--- Ø§ÛŒÙ† Import Ø±Ø§ Ø§Ø¶Ø§ÙÙ‡ Ú©Ù†
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(classes = DemoApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = "management.endpoints.web.exposure.include=health,info,metrics")
 class ActuatorSecurityIntegrationTest {
@@ -24,7 +24,7 @@ class ActuatorSecurityIntegrationTest {
     @DisplayName("Should block unauthenticated access to /actuator/health")
     void whenUnauthenticated_thenAccessToActuatorShouldBeBlocked() throws Exception {
         mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isUnauthorized()); // یا isForbidden بسته به تنظیمات AuthenticationEntryPoint
+                .andExpect(status().isUnauthorized()); // ÛŒØ§ isForbidden Ø¨Ø³ØªÙ‡ Ø¨Ù‡ ØªÙ†Ø¸ÛŒÙ…Ø§Øª AuthenticationEntryPoint
     }
 
     @Test
