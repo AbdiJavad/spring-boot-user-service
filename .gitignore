@@ -1,4 +1,4 @@
-﻿target/
+target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -28,9 +28,13 @@ out/
 ### Logs & Backups ###
 *.log
 backup*/
+backups/
 compile-error*.txt
 project-audit*.txt
 *.bak
 
-# Automated Backups
-backups/
+### Scripts & Local Files ###
+diagnose.ps1
+analyze-and-build.sh
+.env
+docker-data/

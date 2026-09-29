@@ -44,10 +44,10 @@ class AuthIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // ۱. ایزوله‌سازی محیط تست
+        // Û±. Ø§ÛŒØ²ÙˆÙ„Ù‡â€ŒØ³Ø§Ø²ÛŒ Ù…Ø­ÛŒØ· ØªØ³Øª
         userRepository.deleteAll();
 
-        // ۲. آماده‌سازی کاربر تست
+        // Û². Ø¢Ù…Ø§Ø¯Ù‡â€ŒØ³Ø§Ø²ÛŒ Ú©Ø§Ø±Ø¨Ø± ØªØ³Øª
         User testUser = User.builder()
                 .name("Test User")
                 .email("testuser@example.com")
@@ -64,7 +64,7 @@ class AuthIntegrationTest {
     @DisplayName("Full Auth Lifecycle: Login -> Refresh -> Logout")
     void testFullAuthLifecycle() throws Exception {
 
-        // 1. ورود و دریافت Access و Refresh Token
+        // 1. ÙˆØ±ÙˆØ¯ Ùˆ Ø¯Ø±ÛŒØ§ÙØª Access Ùˆ Refresh Token
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
@@ -81,7 +81,7 @@ class AuthIntegrationTest {
         assertNotNull(initialAccessToken);
         assertNotNull(initialRefreshToken);
 
-        // 2. مرحله Refresh Token با DTO استاندارد
+        // 2. Ù…Ø±Ø­Ù„Ù‡ Refresh Token Ø¨Ø§ DTO Ø§Ø³ØªØ§Ù†Ø¯Ø§Ø±Ø¯
         RefreshTokenRequest refreshReq = new RefreshTokenRequest(initialRefreshToken);
 
         MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
@@ -100,7 +100,7 @@ class AuthIntegrationTest {
         assertNotEquals(initialRefreshToken, newTokens.refreshToken(), "Refresh token must rotate");
 
 
-        // 3. مرحله Logout (ارسال بدنه معتبر شامل RefreshToken جدید)
+        // 3. Ù…Ø±Ø­Ù„Ù‡ Logout (Ø§Ø±Ø³Ø§Ù„ Ø¨Ø¯Ù†Ù‡ Ù…Ø¹ØªØ¨Ø± Ø´Ø§Ù…Ù„ RefreshToken Ø¬Ø¯ÛŒØ¯)
         RefreshTokenRequest logoutReq = new RefreshTokenRequest(newTokens.refreshToken());
 
         mockMvc.perform(post("/api/auth/logout")
@@ -108,7 +108,7 @@ class AuthIntegrationTest {
                         .content(objectMapper.writeValueAsString(logoutReq)))
                 .andExpect(status().isNoContent());
 
-        // 4. اعتبارسنجی ابطال: توکن قدیمی دورانداخته شده (initialRefreshToken) دیگر نباید کار کند
+        // 4. Ø§Ø¹ØªØ¨Ø§Ø±Ø³Ù†Ø¬ÛŒ Ø§Ø¨Ø·Ø§Ù„: ØªÙˆÚ©Ù† Ù‚Ø¯ÛŒÙ…ÛŒ Ø¯ÙˆØ±Ø§Ù†Ø¯Ø§Ø®ØªÙ‡ Ø´Ø¯Ù‡ (initialRefreshToken) Ø¯ÛŒÚ¯Ø± Ù†Ø¨Ø§ÛŒØ¯ Ú©Ø§Ø± Ú©Ù†Ø¯
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(refreshReq)))
