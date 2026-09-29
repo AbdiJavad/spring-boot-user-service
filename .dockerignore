@@ -1,0 +1,5 @@
+docker-data/
+.git/
+.idea/
+*.log
+docker.log
