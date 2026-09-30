@@ -14,20 +14,14 @@ import java.util.UUID;
 @Component
 public class MdcFilter extends OncePerRequestFilter {
 
-    private static final String REQUEST_ID = "requestId";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         
-        String requestId = UUID.randomUUID().toString();
-        
         try {
-            MDC.put(REQUEST_ID, requestId);
-            response.addHeader("X-Request-ID", requestId);
             filterChain.doFilter(request, response);
         } finally {
-            MDC.remove(REQUEST_ID);
         }
     }
 }
