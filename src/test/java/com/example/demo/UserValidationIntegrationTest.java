@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(properties = "rate-limiter.enabled=false")
 @AutoConfigureMockMvc
 @Transactional
 @DisplayName("User Validation Integration Tests (RFC 7807)")
