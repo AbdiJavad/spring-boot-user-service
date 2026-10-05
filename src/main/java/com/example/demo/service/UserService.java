@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import com.example.demo.dto.UserDTO;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.exception.EmailAlreadyExistsException;
@@ -8,83 +7,71 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MeterRegistry meterRegistry;
+    private final Counter userRegistrationCounter;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, MeterRegistry meterRegistry) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.meterRegistry = meterRegistry;
+        this.userRegistrationCounter = meterRegistry != null ? meterRegistry.counter("user.registration.count") : null;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserDTO registerUser(UserRegistrationDto dto) {
+        if (userRepository.existsByEmail(dto.email())) {
+            throw new EmailAlreadyExistsException("Email already in use: " + dto.email());
+        }
+        if (userRegistrationCounter != null) {
+            userRegistrationCounter.increment();
+        }
+        User user = new User();
+        user.setName(dto.name());
+        user.setEmail(dto.email());
+        user.setPassword(passwordEncoder.encode(dto.password()));
+        user.setRole(dto.role() != null ? dto.role() : Role.ROLE_USER);
+
+        User savedUser = userRepository.save(user);
+        return mapToDTO(savedUser);
     }
 
-    public Page<User> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-
-    }
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+        return mapToDTO(user);
     }
 
-    public User registerUser(UserRegistrationDto registrationDto) {
-        if (userRepository.existsByEmail(registrationDto.email())) {
-            throw new EmailAlreadyExistsException("Email already exists: " + registrationDto.email());
-        }
-
-        Role role = registrationDto.role() != null ? registrationDto.role() : Role.ROLE_USER;
-
-        User user = User.builder()
-                .name(registrationDto.name())
-                .email(registrationDto.email())
-                .password(passwordEncoder.encode(registrationDto.password()))
-                .role(role)
-                .build();
-
-        return userRepository.save(user);
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public User updateUser(Long id, UserDTO dto) {
-        User user = getUserById(id);
-
-        if (dto.getName() != null && !dto.getName().isBlank()) {
-            user.setName(dto.getName());
-        }
-        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
-            if (!user.getEmail().equalsIgnoreCase(dto.getEmail()) && userRepository.existsByEmail(dto.getEmail())) {
-                throw new EmailAlreadyExistsException("Email already exists: " + dto.getEmail());
-            }
-            user.setEmail(dto.getEmail());
-        }
-
-        return userRepository.save(user);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Long id) {
-        User user = getUserById(id);
-        userRepository.delete(user);
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id: " + id);
+        }
+        userRepository.deleteById(id);
     }
 
+    private UserDTO mapToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole() != null ? user.getRole().name() : null);
+        return dto;
+    }
 }

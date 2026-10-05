@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record AuthenticationRequest(
         @NotBlank(message = "E-Mail darf nicht leer sein")
-        @Email(message = "Bitte eine gÃƒÂ¼ltige E-Mail-Adresse eingeben")
+        @Email(message = "Bitte eine gÃƒÆ’Ã‚Â¼ltige E-Mail-Adresse eingeben")
         String email,
 
         @NotBlank(message = "Passwort darf nicht leer sein")
