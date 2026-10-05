@@ -44,10 +44,10 @@ class AuthIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // Û±. Ø§ÛŒØ²ÙˆÙ„Ù‡â€ŒØ³Ø§Ø²ÛŒ Ù…Ø­ÛŒØ· ØªØ³Øª
+        // Ã›Â±. Ã˜Â§Ã›Å’Ã˜Â²Ã™Ë†Ã™â€žÃ™â€¡Ã¢â‚¬Å’Ã˜Â³Ã˜Â§Ã˜Â²Ã›Å’ Ã™â€¦Ã˜Â­Ã›Å’Ã˜Â· Ã˜ÂªÃ˜Â³Ã˜Âª
         userRepository.deleteAll();
 
-        // Û². Ø¢Ù…Ø§Ø¯Ù‡â€ŒØ³Ø§Ø²ÛŒ Ú©Ø§Ø±Ø¨Ø± ØªØ³Øª
+        // Ã›Â². Ã˜Â¢Ã™â€¦Ã˜Â§Ã˜Â¯Ã™â€¡Ã¢â‚¬Å’Ã˜Â³Ã˜Â§Ã˜Â²Ã›Å’ ÃšÂ©Ã˜Â§Ã˜Â±Ã˜Â¨Ã˜Â± Ã˜ÂªÃ˜Â³Ã˜Âª
         User testUser = User.builder()
                 .name("Test User")
                 .email("testuser@example.com")
@@ -64,7 +64,7 @@ class AuthIntegrationTest {
     @DisplayName("Full Auth Lifecycle: Login -> Refresh -> Logout")
     void testFullAuthLifecycle() throws Exception {
 
-        // 1. ÙˆØ±ÙˆØ¯ Ùˆ Ø¯Ø±ÛŒØ§ÙØª Access Ùˆ Refresh Token
+        // 1. Ã™Ë†Ã˜Â±Ã™Ë†Ã˜Â¯ Ã™Ë† Ã˜Â¯Ã˜Â±Ã›Å’Ã˜Â§Ã™ÂÃ˜Âª Access Ã™Ë† Refresh Token
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
@@ -81,7 +81,7 @@ class AuthIntegrationTest {
         assertNotNull(initialAccessToken);
         assertNotNull(initialRefreshToken);
 
-        // 2. Ù…Ø±Ø­Ù„Ù‡ Refresh Token Ø¨Ø§ DTO Ø§Ø³ØªØ§Ù†Ø¯Ø§Ø±Ø¯
+        // 2. Ã™â€¦Ã˜Â±Ã˜Â­Ã™â€žÃ™â€¡ Refresh Token Ã˜Â¨Ã˜Â§ DTO Ã˜Â§Ã˜Â³Ã˜ÂªÃ˜Â§Ã™â€ Ã˜Â¯Ã˜Â§Ã˜Â±Ã˜Â¯
         RefreshTokenRequest refreshReq = new RefreshTokenRequest(initialRefreshToken);
 
         MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
@@ -100,7 +100,7 @@ class AuthIntegrationTest {
         assertNotEquals(initialRefreshToken, newTokens.refreshToken(), "Refresh token must rotate");
 
 
-        // 3. Ù…Ø±Ø­Ù„Ù‡ Logout (Ø§Ø±Ø³Ø§Ù„ Ø¨Ø¯Ù†Ù‡ Ù…Ø¹ØªØ¨Ø± Ø´Ø§Ù…Ù„ RefreshToken Ø¬Ø¯ÛŒØ¯)
+        // 3. Ã™â€¦Ã˜Â±Ã˜Â­Ã™â€žÃ™â€¡ Logout (Ã˜Â§Ã˜Â±Ã˜Â³Ã˜Â§Ã™â€ž Ã˜Â¨Ã˜Â¯Ã™â€ Ã™â€¡ Ã™â€¦Ã˜Â¹Ã˜ÂªÃ˜Â¨Ã˜Â± Ã˜Â´Ã˜Â§Ã™â€¦Ã™â€ž RefreshToken Ã˜Â¬Ã˜Â¯Ã›Å’Ã˜Â¯)
         RefreshTokenRequest logoutReq = new RefreshTokenRequest(newTokens.refreshToken());
 
         mockMvc.perform(post("/api/auth/logout")
@@ -108,7 +108,7 @@ class AuthIntegrationTest {
                         .content(objectMapper.writeValueAsString(logoutReq)))
                 .andExpect(status().isNoContent());
 
-        // 4. Ø§Ø¹ØªØ¨Ø§Ø±Ø³Ù†Ø¬ÛŒ Ø§Ø¨Ø·Ø§Ù„: ØªÙˆÚ©Ù† Ù‚Ø¯ÛŒÙ…ÛŒ Ø¯ÙˆØ±Ø§Ù†Ø¯Ø§Ø®ØªÙ‡ Ø´Ø¯Ù‡ (initialRefreshToken) Ø¯ÛŒÚ¯Ø± Ù†Ø¨Ø§ÛŒØ¯ Ú©Ø§Ø± Ú©Ù†Ø¯
+        // 4. Ã˜Â§Ã˜Â¹Ã˜ÂªÃ˜Â¨Ã˜Â§Ã˜Â±Ã˜Â³Ã™â€ Ã˜Â¬Ã›Å’ Ã˜Â§Ã˜Â¨Ã˜Â·Ã˜Â§Ã™â€ž: Ã˜ÂªÃ™Ë†ÃšÂ©Ã™â€  Ã™â€šÃ˜Â¯Ã›Å’Ã™â€¦Ã›Å’ Ã˜Â¯Ã™Ë†Ã˜Â±Ã˜Â§Ã™â€ Ã˜Â¯Ã˜Â§Ã˜Â®Ã˜ÂªÃ™â€¡ Ã˜Â´Ã˜Â¯Ã™â€¡ (initialRefreshToken) Ã˜Â¯Ã›Å’ÃšÂ¯Ã˜Â± Ã™â€ Ã˜Â¨Ã˜Â§Ã›Å’Ã˜Â¯ ÃšÂ©Ã˜Â§Ã˜Â± ÃšÂ©Ã™â€ Ã˜Â¯
         mockMvc.perform(post("/api/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(refreshReq)))

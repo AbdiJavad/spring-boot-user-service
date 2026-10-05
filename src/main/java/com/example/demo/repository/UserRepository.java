@@ -3,14 +3,14 @@ package com.example.demo.repository;
 import com.example.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.List; // Ã˜Â§Ã›Å’Ã™â€  Ã˜Â±Ã˜Â§ import ÃšÂ©Ã™â€ 
+import java.util.List; // ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ import ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â 
 import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Ã˜Â§Ã›Å’Ã™â€ Ã˜Â¬Ã˜Â§ Ã™â€žÃ˜Â§Ã˜Â²Ã™â€¦ Ã™â€ Ã›Å’Ã˜Â³Ã˜Âª Ãšâ€ Ã›Å’Ã˜Â²Ã›Å’ Ã˜Â¨Ã™â€ Ã™Ë†Ã›Å’Ã˜Â³Ã›Å’! Ã˜Â¬Ã˜Â§Ã˜Â¯Ã™Ë†Ã›Å’ Ã˜Â§Ã˜Â³Ã™Â¾Ã˜Â±Ã›Å’Ã™â€ ÃšÂ¯ Ã™â€¡Ã™â€¦Ã›Å’Ã™â€ Ã¢â‚¬Å’Ã˜Â¬Ã˜Â§Ã˜Â³Ã˜Âª.
+    // ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§ÃƒËœÃ‚Â²Ãƒâ„¢Ã¢â‚¬Â¦ Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª ÃƒÅ¡Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â²Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™! ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒÅ¡Ã‚Â¯ Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª.
     List<User> findByName(String name);
     boolean existsByEmail(String email);
 
-    Optional<User> findByEmail(String email); // Ã˜Â§Ã›Å’Ã™â€  Ã˜Â®Ã˜Â· Ã˜Â±Ã˜Â§ Ã˜Â§Ã˜Â¶Ã˜Â§Ã™ÂÃ™â€¡ ÃšÂ©Ã™â€ 
+    Optional<User> findByEmail(String email); // ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â®ÃƒËœÃ‚Â· ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¶ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒâ„¢Ã¢â‚¬Â¡ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â 
 }

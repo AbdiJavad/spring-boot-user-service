@@ -31,14 +31,14 @@ class TokenCleanupSchedulerIntegrationTest {
     void cleanupExpiredRevokedTokens_shouldDeleteOnlyExpiredTokens() {
         Instant now = Instant.now();
 
-        // Û±. Ø±Ú©ÙˆØ±Ø¯ Ù…Ù†Ù‚Ø¶ÛŒ (Û² Ø³Ø§Ø¹Øª Ù¾ÛŒØ´)
+        // Ã›Â±. Ã˜Â±ÃšÂ©Ã™Ë†Ã˜Â±Ã˜Â¯ Ã™â€¦Ã™â€ Ã™â€šÃ˜Â¶Ã›Å’ (Ã›Â² Ã˜Â³Ã˜Â§Ã˜Â¹Ã˜Âª Ã™Â¾Ã›Å’Ã˜Â´)
         RevokedToken expiredToken = new RevokedToken("expired-1", now.minus(2, ChronoUnit.HOURS), now.minus(3, ChronoUnit.HOURS));
-        // Û². Ø±Ú©ÙˆØ±Ø¯ ÙØ¹Ø§Ù„ (Û² Ø³Ø§Ø¹Øª Ø¢ÛŒÙ†Ø¯Ù‡)
+        // Ã›Â². Ã˜Â±ÃšÂ©Ã™Ë†Ã˜Â±Ã˜Â¯ Ã™ÂÃ˜Â¹Ã˜Â§Ã™â€ž (Ã›Â² Ã˜Â³Ã˜Â§Ã˜Â¹Ã˜Âª Ã˜Â¢Ã›Å’Ã™â€ Ã˜Â¯Ã™â€¡)
         RevokedToken activeToken = new RevokedToken("active-1", now.plus(2, ChronoUnit.HOURS), now.minus(10, ChronoUnit.MINUTES));
 
         revokedTokenRepository.save(expiredToken);
         revokedTokenRepository.save(activeToken);
-        revokedTokenRepository.flush(); // Ø§Ø·Ù…ÛŒÙ†Ø§Ù† Ø§Ø² Ø§Ø¹Ù…Ø§Ù„ Ø¯Ø± Ø¯ÛŒØªØ§Ø¨ÛŒØ³
+        revokedTokenRepository.flush(); // Ã˜Â§Ã˜Â·Ã™â€¦Ã›Å’Ã™â€ Ã˜Â§Ã™â€  Ã˜Â§Ã˜Â² Ã˜Â§Ã˜Â¹Ã™â€¦Ã˜Â§Ã™â€ž Ã˜Â¯Ã˜Â± Ã˜Â¯Ã›Å’Ã˜ÂªÃ˜Â§Ã˜Â¨Ã›Å’Ã˜Â³
 
         tokenCleanupScheduler.cleanupExpiredRevokedTokens();
 

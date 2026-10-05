@@ -31,7 +31,7 @@ public class User implements UserDetails {
     private String name;
 
     @NotBlank(message = "E-Mail darf nicht leer sein")
-    @Email(message = "Bitte eine gÃƒÂ¼ltige E-Mail-Adresse eingeben")
+    @Email(message = "Bitte eine gÃƒÆ’Ã‚Â¼ltige E-Mail-Adresse eingeben")
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -49,7 +49,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Defensive coding: Ã˜Â¯Ã˜Â± Ã˜ÂµÃ™Ë†Ã˜Â±Ã˜Âª Ã™â€ Ã˜Â§Ã™â€ž Ã˜Â¨Ã™Ë†Ã˜Â¯Ã™â€  Ã˜Â±Ã™Ë†Ã™â€žÃ˜Å’ Ã˜Â¯Ã˜Â³Ã˜ÂªÃ˜Â±Ã˜Â³Ã›Å’ Ã™Â¾Ã›Å’Ã˜Â´Ã¢â‚¬Å’Ã™ÂÃ˜Â±Ã˜Â¶ ROLE_USER Ã™â€žÃ˜Â­Ã˜Â§Ã˜Â¸ Ã™â€¦Ã›Å’Ã¢â‚¬Å’Ã˜Â´Ã™Ë†Ã˜Â¯
+        // Defensive coding: ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â± ÃƒËœÃ‚ÂµÃƒâ„¢Ã‹â€ ÃƒËœÃ‚Â±ÃƒËœÃ‚Âª Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â¨Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â±Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ…â€™ ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã‚Â¾Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â´ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â±ÃƒËœÃ‚Â¶ ROLE_USER Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â­ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¸ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯
         return List.of(new SimpleGrantedAuthority(this.role != null ? this.role.name() : "ROLE_USER"));
     }
 
