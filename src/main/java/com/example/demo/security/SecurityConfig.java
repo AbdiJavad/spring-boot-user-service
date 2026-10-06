@@ -65,7 +65,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/v1/users/**").hasRole("ADMIN")
 
                         // Actuator Security Policy
-                        .requestMatchers("/actuator/**").hasRole("ADMIN")
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                                .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                                .requestMatchers("/actuator/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
