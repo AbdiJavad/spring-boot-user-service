@@ -1,4 +1,11 @@
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
+
+# ساخت کاربر غیر-root آلپاین برای امنیت سازمانی
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
 COPY target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]

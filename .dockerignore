@@ -1,5 +1,9 @@
-docker-data/
-.git/
-.idea/
-*.log
-docker.log
+**/.git
+**/.gitignore
+**/.idea
+**/.vscode
+target/*
+!target/*.jar
+node_modules
+.mvn
+src

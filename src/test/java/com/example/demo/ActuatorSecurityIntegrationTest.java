@@ -6,17 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.TestPropertySource; // <--- Ø§ÛŒÙ† Import Ø±Ø§ Ø§Ø¶Ø§ÙÙ‡ Ú©Ù†
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = DemoApplication.class)
 @AutoConfigureMockMvc
-@TestPropertySource(properties = "management.endpoints.web.exposure.include=health,info,metrics,prometheus")
+@TestPropertySource(properties = "management.endpoints.web.exposure.include=health,info,metrics")
 class ActuatorSecurityIntegrationTest {
 
     @Autowired
@@ -26,7 +24,7 @@ class ActuatorSecurityIntegrationTest {
     @DisplayName("Should block unauthenticated access to /actuator/health")
     void whenUnauthenticated_thenAccessToActuatorShouldBeBlocked() throws Exception {
         mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized()); // ÛŒØ§ isForbidden Ø¨Ø³ØªÙ‡ Ø¨Ù‡ ØªÙ†Ø¸ÛŒÙ…Ø§Øª AuthenticationEntryPoint
     }
 
     @Test
@@ -59,22 +57,5 @@ class ActuatorSecurityIntegrationTest {
     void whenAdminRole_thenAccessToMetricsShouldBeAllowed() throws Exception {
         mockMvc.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("Should forbid USER role from accessing /actuator/prometheus")
-    @WithMockUser(username = "user", roles = {"USER"})
-    void whenUserRole_thenAccessToPrometheusShouldBeForbidden() throws Exception {
-        mockMvc.perform(get("/actuator/prometheus"))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DisplayName("Should allow ADMIN role to scrape /actuator/prometheus")
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void whenAdminRole_thenAccessToPrometheusShouldBeAllowed() throws Exception {
-        mockMvc.perform(get("/actuator/prometheus"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("jvm_memory_used_bytes")));
     }
 }

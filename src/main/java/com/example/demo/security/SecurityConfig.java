@@ -64,11 +64,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users/**", "/api/v1/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/v1/users/**").hasRole("ADMIN")
 
-                        // Actuator Security Policy
+                        // Actuator Security Policy: Protect ALL actuator endpoints for ADMIN only
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
