@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import com.example.demo.exception.InvalidRefreshTokenException;
 import java.time.Instant;
 import java.util.Base64;
 
@@ -36,13 +37,13 @@ public class RefreshTokenService {
     @Transactional(readOnly = true)
     public RefreshToken validateRefreshToken(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+                .orElseThrow(() -> new InvalidRefreshTokenException("Invalid refresh token"));
 
         if (refreshToken.isRevoked()) {
-            throw new IllegalArgumentException("Refresh token has been revoked");
+            throw new InvalidRefreshTokenException("Refresh token has been revoked");
         }
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("Refresh token has expired");
+            throw new InvalidRefreshTokenException("Refresh token has expired");
         }
         return refreshToken;
     }
@@ -56,15 +57,15 @@ public class RefreshTokenService {
     public RefreshToken rotate(String token) {
         // 1. Look up the current (non-revoked) token together with its user
         RefreshToken oldToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
+                .orElseThrow(() -> new InvalidRefreshTokenException("Refresh token not found"));
 
         // 2. Validate current state
         if (oldToken.isRevoked()) {
             // Reuse of a revoked token indicates possible theft; revoke the whole family later.
-            throw new IllegalArgumentException("Refresh token has been revoked (possible reuse detected)");
+            throw new InvalidRefreshTokenException("Refresh token has been revoked (possible reuse detected)");
         }
         if (oldToken.getExpiryDate().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("Refresh token has expired");
+            throw new InvalidRefreshTokenException("Refresh token has expired");
         }
 
         // 3. Revoke the old token row (kept in DB for reuse detection / audit)
@@ -85,7 +86,7 @@ public class RefreshTokenService {
     @Transactional
     public void revoke(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Refresh token not found"));
+                .orElseThrow(() -> new InvalidRefreshTokenException("Refresh token not found"));
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
     }

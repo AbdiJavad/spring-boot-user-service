@@ -6,22 +6,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UserRegistrationDto(
-        @NotBlank(message = "Name darf nicht leer sein")
-        @Size(min = 2, max = 50, message = "Name muss zwischen 2 und 50 Zeichen lang sein")
-        String name,
+    @NotBlank(message = "Name cannot be blank") 
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    String name,
 
-        @NotBlank(message = "E-Mail darf nicht leer sein")
-        @Email(message = "Bitte eine gÃƒÂ¼ltige E-Mail-Adresse eingeben")
-        String email,
+    @NotBlank(message = "Email cannot be blank") 
+    @Email(message = "Invalid email format") 
+    String email,
 
-        @NotBlank(message = "Passwort darf nicht leer sein")
-        @Size(min = 6, message = "Passwort muss mindestens 6 Zeichen lang sein")
-        String password,
+    @NotBlank(message = "Password cannot be blank") 
+    @Size(min = 6, message = "Password must be at least 6 characters") 
+    String password,
 
-        Role role
+    Role role
 ) {
-        // Overloaded Constructor Ã˜Â¨Ã˜Â±Ã˜Â§Ã›Å’ Ã™Â¾Ã˜Â´Ã˜ÂªÃ›Å’Ã˜Â¨Ã˜Â§Ã™â€ Ã›Å’ Ã˜Â§Ã˜Â² Ã›Â³ Ã™Â¾Ã˜Â§Ã˜Â±Ã˜Â§Ã™â€¦Ã˜ÂªÃ˜Â± (Ã™Â¾Ã›Å’Ã˜Â´Ã¢â‚¬Å’Ã™ÂÃ˜Â±Ã˜Â¶ Ã˜Â¨Ã˜Â¯Ã™Ë†Ã™â€  Role Ã˜ÂµÃ˜Â±Ã›Å’Ã˜Â­)
-        public UserRegistrationDto(String name, String email, String password) {
-                this(name, email, password, null);
-        }
+    public UserRegistrationDto(String name, String email, String password) {
+        this(name, email, password, null);
+    }
 }

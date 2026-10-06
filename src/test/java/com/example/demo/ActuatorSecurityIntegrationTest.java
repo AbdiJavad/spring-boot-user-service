@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.TestPropertySource; // <--- Ø§ÛŒÙ† Import Ø±Ø§ Ø§Ø¶Ø§ÙÙ‡ Ú©Ù†
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,17 +21,26 @@ class ActuatorSecurityIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Should allow unauthenticated access to /actuator/health")
-    void whenUnauthenticated_thenAccessToHealthShouldBeAllowed() throws Exception {
+    @DisplayName("Should block unauthenticated access to /actuator/health")
+    void whenUnauthenticated_thenAccessToActuatorShouldBeBlocked() throws Exception {
         mockMvc.perform(get("/actuator/health"))
-                .andExpect(status().isOk());
+                .andExpect(status().isUnauthorized()); // ÛŒØ§ isForbidden Ø¨Ø³ØªÙ‡ Ø¨Ù‡ ØªÙ†Ø¸ÛŒÙ…Ø§Øª AuthenticationEntryPoint
     }
 
     @Test
-    @DisplayName("Should block unauthenticated access to /actuator/metrics")
-    void whenUnauthenticated_thenAccessToMetricsShouldBeBlocked() throws Exception {
-        mockMvc.perform(get("/actuator/metrics"))
-                .andExpect(status().isUnauthorized());
+    @DisplayName("Should forbid USER role from accessing /actuator/health")
+    @WithMockUser(username = "user", roles = {"USER"})
+    void whenUserRole_thenAccessToActuatorShouldBeForbidden() throws Exception {
+        mockMvc.perform(get("/actuator/health"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("Should allow ADMIN role to access /actuator/health")
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    void whenAdminRole_thenAccessToActuatorShouldBeAllowed() throws Exception {
+        mockMvc.perform(get("/actuator/health"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -47,14 +56,6 @@ class ActuatorSecurityIntegrationTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void whenAdminRole_thenAccessToMetricsShouldBeAllowed() throws Exception {
         mockMvc.perform(get("/actuator/metrics"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("Should allow authenticated USER role to access /actuator/health")
-    @WithMockUser(username = "user", roles = {"USER"})
-    void whenUserRole_thenAccessToHealthShouldBeAllowed() throws Exception {
-        mockMvc.perform(get("/actuator/health"))
                 .andExpect(status().isOk());
     }
 }

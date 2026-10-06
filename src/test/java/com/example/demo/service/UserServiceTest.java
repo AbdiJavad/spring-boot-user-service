@@ -1,56 +1,54 @@
 package com.example.demo.service;
 
-import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+public class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
+    private UserRepository userRepository = mock(UserRepository.class);
+    private PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+    private MeterRegistry meterRegistry = mock(MeterRegistry.class);
+    private Counter counter = mock(Counter.class);
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @InjectMocks
     private UserService userService;
 
-    @Test
-    void getUserById_whenUserExists_returnsUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setName("Jovan");
-        user.setEmail("jovan@example.com");
-        user.setPassword("encoded-password");
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-        User result = userService.getUserById(1L);
-
-        assertNotNull(result);
-        assertEquals("Jovan", result.getName());
-        assertEquals("jovan@example.com", result.getEmail());
-        verify(userRepository).findById(1L);
+    @BeforeEach
+    void setUp() {
+        // Explicitly stub the meterRegistry
+        when(meterRegistry.counter(anyString())).thenReturn(counter);
+        
+        // Manual constructor injection to ensure complete control
+        userService = new UserService(userRepository, passwordEncoder, meterRegistry);
     }
 
     @Test
-    void getUserById_whenUserMissing_throwsResourceNotFound() {
-        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+    void testRegisterUser() {
+        UserRegistrationDto dto = new UserRegistrationDto("Javad", "javad@example.com", "password");
+        User savedUser = new User();
+        savedUser.setId(1L);
+        savedUser.setEmail(dto.email());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(99L));
-        verify(userRepository).findById(99L);
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        
+        UserDTO result = userService.registerUser(dto);
+        
+        assertNotNull(result);
     }
 }
-

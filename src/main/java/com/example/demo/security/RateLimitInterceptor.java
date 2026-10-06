@@ -5,19 +5,29 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class RateLimitInterceptor implements HandlerInterceptor {
+
+    @Value("${rate-limiter.enabled:true}")
+    private boolean enabled;
 
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (!enabled) {
+            return true;
+        }
+
         String clientIp = request.getRemoteAddr();
         Bucket bucket = cache.computeIfAbsent(clientIp, this::createNewBucket);
 
@@ -31,7 +41,10 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     }
 
     private Bucket createNewBucket(String key) {
-        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
+        Bandwidth limit = Bandwidth.builder()
+                .capacity(10)
+                .refillGreedy(10, Duration.ofMinutes(1))
+                .build();
         return Bucket.builder().addLimit(limit).build();
     }
 }
