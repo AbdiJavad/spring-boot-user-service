@@ -1,40 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="demo-service"/>
 
-    <!-- 1. Development Profile: Clean, human-readable colored logs for local debugging -->
-    <springProfile name="dev">
+    <springProfile name="default | dev">
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
-                <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [traceId=%X{traceId:-}, spanId=%X{spanId:-}] - %msg%n</pattern>
             </encoder>
         </appender>
         <root level="INFO">
-            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
-    <!-- 2. Non-Dev / Production Profile: Structured JSON logging for ELK/Loki/Grafana -->
-    <springProfile name="!dev">
+    <springProfile name="docker">
         <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-                <providers>
-                    <timestamp>
-                        <timeZone>UTC</timeZone>
-                    </timestamp>
-                    <version/>
-                    <logLevel/>
-                    <loggerName/>
-                    <threadName/>
-                    <message/>
-                    <logstashMarkers/>
-                    <arguments/>
-                    <stackTrace/>
-                </providers>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"app":""}</customFields>
             </encoder>
         </appender>
         <root level="INFO">
-            <appender-ref ref="JSON_CONSOLE" />
+            <appender-ref ref="JSON_CONSOLE"/>
         </root>
     </springProfile>
 </configuration>
