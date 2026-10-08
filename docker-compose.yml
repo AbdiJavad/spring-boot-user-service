@@ -1,61 +1,31 @@
-services:
+﻿services:
   app:
-    build:
-      context: .
-    container_name: spring_user_service
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/user_service_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus,metrics
-      RATE_LIMITER_ENABLED: "true"
-    ports:
-      - "9090:8080"
-    restart: unless-stopped
-    networks:
-      - app_network
-
-  postgres:
-    container_name: postgres_db
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: user_service_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d user_service_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
-    volumes:
-      - postgres_data:/var/lib/postgresql/data:rw
-      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
-    networks:
-      - app_network
-
-  prometheus:
-    container_name: prometheus_service
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    build: .
     ports:
       - "9090:9090"
-    restart: unless-stopped
-    depends_on:
-      - app
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
     networks:
-      - app_network
+      - monitoring
 
-volumes:
-  postgres_data: {}
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - "9091:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
 
 networks:
-  app_network:
+  monitoring:
     driver: bridge
