@@ -65,6 +65,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**", "/api/v1/users/**").hasRole("ADMIN")
 
                         // Actuator Security Policy: Protect ALL actuator endpoints for ADMIN only
+                        // Observability: allow health and prometheus for scraping/readiness
+                        .requestMatchers(
+                                "/actuator/health",
+                                "/actuator/health/**",
+                                "/actuator/prometheus"
+                        ).permitAll()
+                        // Actuator Security Policy: Protect ALL other actuator endpoints for ADMIN only
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
