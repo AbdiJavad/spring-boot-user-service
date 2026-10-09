@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
@@ -23,13 +22,15 @@ public class RateLimitFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/actuator/") || path.startsWith("/swagger-ui/");
+    }
 
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String clientIp = resolveClientIp(request);
         Bucket bucket = rateLimitService.resolveBucket(clientIp);
-
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
         if (probe.isConsumed()) {
@@ -40,12 +41,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setHeader("X-Rate-Limit-Retry-After-Seconds", String.valueOf(waitForRefillSeconds));
-
-            String jsonPayload = String.format(
-                    "{\"status\":429,\"error\":\"Too Many Requests\",\"message\":\"Request limit exceeded. Try again in %d seconds.\"}",
-                    waitForRefillSeconds
-            );
-            response.getWriter().write(jsonPayload);
+            response.getWriter().write(String.format("{\"status\":429,\"error\":\"Too Many Requests\",\"message\":\"Try again in %d seconds.\"}", waitForRefillSeconds));
         }
     }
 

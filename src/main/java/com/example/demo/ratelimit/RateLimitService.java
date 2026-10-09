@@ -1,27 +1,32 @@
 package com.example.demo.ratelimit;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import org.springframework.stereotype.Service;
-
 import java.time.Duration;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class RateLimitService {
 
-    private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
+    private final Cache<String, Bucket> cache;
+
+    public RateLimitService() {
+        this.cache = Caffeine.newBuilder()
+                .expireAfterAccess(Duration.ofMinutes(10))
+                .maximumSize(1000)
+                .build();
+    }
 
     public Bucket resolveBucket(String key) {
-        return cache.computeIfAbsent(key, this::createNewBucket);
+        return cache.get(key, this::createNewBucket);
     }
 
     private Bucket createNewBucket(String key) {
-        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
         return Bucket.builder()
-                .addLimit(limit)
+                .addLimit(Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1))))
                 .build();
     }
 }
