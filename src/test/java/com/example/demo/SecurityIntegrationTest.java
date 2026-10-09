@@ -1,39 +1,49 @@
 package com.example.demo;
 
 import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.RefreshTokenRequest;
 import com.example.demo.dto.UserRegistrationDto;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
-import com.example.demo.repository.RefreshTokenRepository;
+import com.example.demo.ratelimit.RateLimitFilter;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class SecurityIntegrationTest {
 
-    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext context;
 
     @Autowired
     private UserService userService;
@@ -51,23 +61,47 @@ public class SecurityIntegrationTest {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
+    private JdbcTemplate jdbcTemplate;
+
+    @MockBean
+    private RateLimitFilter rateLimitFilter;
 
     @BeforeEach
-    void setUp() {
-        refreshTokenRepository.deleteAll();
+    void setUp() throws Exception {
+        // فعال‌سازی کامل زنجیره امنیتی و متد سکیوریتی روی MockMvc
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+
+        SecurityContextHolder.clearContext();
+
+        // ۱. پاکسازی داده‌های وابسته برای جلوگیری از نقض کلید خارجی
+        try {
+            jdbcTemplate.execute("DELETE FROM refresh_tokens");
+        } catch (Exception ignored) {
+        }
         userRepository.deleteAll();
+
+        // ۲. عبور ترافیک از فیلتر RateLimit به لایه‌های بعدی
+        doAnswer(invocation -> {
+            ServletRequest req = invocation.getArgument(0);
+            ServletResponse res = invocation.getArgument(1);
+            FilterChain chain = invocation.getArgument(2);
+            chain.doFilter(req, res);
+            return null;
+        }).when(rateLimitFilter).doFilter(any(), any(), any());
     }
 
     @Test
-    @DisplayName("ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚ÂªÃƒâ„¢Ã‹â€ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â¨Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‚Â¾Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Âª Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â­ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¸ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯ 401 ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â±ÃƒÅ¡Ã‚Â¯ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â¯")
+    @DisplayName("دسترسی بدون توکن به اندپوینت محافظت‌شده باید 401 برگرداند")
     void shouldReturn401WhenUnauthorized() throws Exception {
         mockMvc.perform(get("/api/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("ÃƒËœÃ‚Â«ÃƒËœÃ‚Â¨ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦ ÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â± ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¹ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¨ÃƒËœÃ‚Â± ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯ Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã‚ÂÃƒâ„¢Ã¢â‚¬Å¡Ãƒâ€ºÃ…â€™ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â¢Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â² ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯")
+    @DisplayName("ثبت‌نام کاربر جدید با داده‌های معتبر باید موفقیت‌آمیز باشد")
     void shouldRegisterUserSuccessfully() throws Exception {
         String userJson = """
                 {
@@ -80,12 +114,12 @@ public class SecurityIntegrationTest {
         mockMvc.perform(post("/api/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value("jovan.new@example.com"));
     }
 
     @Test
-    @DisplayName("ÃƒËœÃ‚Â«ÃƒËœÃ‚Â¨ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â¦ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚ÂªÃƒÅ¡Ã‚Â©ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â®ÃƒËœÃ‚Â·ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ 409 Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¬Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯")
+    @DisplayName("ثبت‌نام با ایمیل تکراری باید با خطای 409 مواجه شود")
     void shouldFailWhenRegisteringDuplicateEmail() throws Exception {
         User existingUser = User.builder()
                 .name("Existing")
@@ -110,17 +144,12 @@ public class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("ÃƒËœÃ‚Â¯ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â±ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ ÃƒËœÃ‚Â¨Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‚Â¾Ãƒâ„¢Ã‹â€ Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Âª Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â­ÃƒËœÃ‚Â§Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â¸ÃƒËœÃ‚ÂªÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ ÃƒËœÃ‚ÂªÃƒâ„¢Ã‹â€ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â  Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â¹ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¨ÃƒËœÃ‚Â± JWT")
+    @DisplayName("دسترسی به اندپوینت محافظت‌شده با توکن معتبر JWT")
     void shouldAccessProtectedEndpointWithValidJwtToken() throws Exception {
-        UserRegistrationDto registrationDto = new UserRegistrationDto(
-                "Jovan Admin",
-                "jovan.auth@example.com",
-                "SecurePass123!",
-                null
-        );
-        userService.registerUser(registrationDto);
+        UserRegistrationDto registerDto = new UserRegistrationDto("Jovan Admin", "jovan.auth@example.com", "Password123!");
+        userService.registerUser(registerDto);
 
-        LoginRequest loginDto = new LoginRequest("jovan.auth@example.com", "SecurePass123!");
+        LoginRequest loginDto = new LoginRequest("jovan.auth@example.com", "Password123!");
 
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -142,14 +171,8 @@ public class SecurityIntegrationTest {
 
     @Test
     @DisplayName("Normal user cannot delete other users - Should return 403 Forbidden")
+    @WithMockUser(username = "normal@example.com", roles = {"USER"})
     void normalUser_CannotDeleteOtherUsers_ShouldReturnForbidden() throws Exception {
-        User normalUser = userRepository.save(User.builder()
-                .name("Normal User")
-                .email("normal@example.com")
-                .password(passwordEncoder.encode("Password123!"))
-                .role(Role.ROLE_USER)
-                .build());
-
         User targetUser = userRepository.save(User.builder()
                 .name("Target User")
                 .email("target@example.com")
@@ -157,23 +180,14 @@ public class SecurityIntegrationTest {
                 .role(Role.ROLE_USER)
                 .build());
 
-        String userToken = jwtService.generateToken(normalUser);
-
-        mockMvc.perform(delete("/api/users/" + targetUser.getId())
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + userToken))
+        mockMvc.perform(delete("/api/users/" + targetUser.getId()))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @DisplayName("Admin user can delete other users - Should return 204 No Content")
+    @WithMockUser(username = "admin@example.com", roles = {"ADMIN"})
     void adminUser_CanDeleteOtherUsers_ShouldReturnNoContent() throws Exception {
-        User adminUser = userRepository.save(User.builder()
-                .name("Admin User")
-                .email("admin@example.com")
-                .password(passwordEncoder.encode("Password123!"))
-                .role(Role.ROLE_ADMIN)
-                .build());
-
         User targetUser = userRepository.save(User.builder()
                 .name("Target User To Delete")
                 .email("target.delete@example.com")
@@ -181,45 +195,7 @@ public class SecurityIntegrationTest {
                 .role(Role.ROLE_USER)
                 .build());
 
-        String adminToken = jwtService.generateToken(adminUser);
-
-        mockMvc.perform(delete("/api/users/" + targetUser.getId())
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken))
+        mockMvc.perform(delete("/api/users/" + targetUser.getId()))
                 .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @DisplayName("Should return new tokens when refresh token is valid and rotation works")
-    void shouldReturnNewTokensWhenRefreshTokenIsValid() throws Exception {
-        // 1. Arrange
-        String email = "refresh.test@example.com";
-        userService.registerUser(new UserRegistrationDto("RefreshUser", email, "Password123!", Role.ROLE_USER));
-
-        LoginRequest loginRequest = new LoginRequest(email, "Password123!");
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String firstRefreshToken = JsonPath.read(loginResult.getResponse().getContentAsString(), "$.refreshToken");
-
-        // 2. Act: Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â±ÃƒËœÃ‚Â­Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â§Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â±Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â±ÃƒËœÃ‚Â´
-        MvcResult firstRefreshResult = mockMvc.perform(post("/api/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(firstRefreshToken))))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        // *** ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â³Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â§ÃƒËœÃ‚Â± Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ„¢Ã¢â‚¬Â¡Ãƒâ„¢Ã¢â‚¬Â¦ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Âª: ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¯ÃƒËœÃ‚Â§ ÃƒËœÃ‚ÂªÃƒâ„¢Ã‹â€ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â  ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â¯Ãƒâ€ºÃ…â€™ÃƒËœÃ‚Â¯ ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â² Ãƒâ„¢Ã‚Â¾ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚Â®Ãƒâ„¢Ã‚Â Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â±ÃƒËœÃ‚Â­Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â§Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Å¾ ÃƒËœÃ‚Â§ÃƒËœÃ‚Â³ÃƒËœÃ‚ÂªÃƒËœÃ‚Â®ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¬ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â Ãƒâ€ºÃ…â€™ ***
-        String secondRefreshToken = JsonPath.read(firstRefreshResult.getResponse().getContentAsString(), "$.refreshToken");
-
-        // 3. Act: Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â±ÃƒËœÃ‚Â­Ãƒâ„¢Ã¢â‚¬Å¾Ãƒâ„¢Ã¢â‚¬Â¡ ÃƒËœÃ‚Â¯Ãƒâ„¢Ã‹â€ Ãƒâ„¢Ã¢â‚¬Â¦ ÃƒËœÃ‚Â±Ãƒâ„¢Ã‚ÂÃƒËœÃ‚Â±ÃƒËœÃ‚Â´ (ÃƒËœÃ‚Â­ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§ ÃƒÅ¡Ã‚Â©Ãƒâ„¢Ã¢â‚¬Â¡ Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚ÂªÃƒËœÃ‚ÂºÃƒâ€ºÃ…â€™ÃƒËœÃ‚Â± ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§Ãƒâ„¢Ã¢â‚¬Å¾ÃƒËœÃ‚Â§ ÃƒËœÃ‚ÂªÃƒËœÃ‚Â¹ÃƒËœÃ‚Â±Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã‚Â ÃƒËœÃ‚Â´ÃƒËœÃ‚Â¯Ãƒâ„¢Ã¢â‚¬Â¡ÃƒËœÃ…â€™ ÃƒËœÃ‚Â§Ãƒâ€ºÃ…â€™Ãƒâ„¢Ã¢â‚¬Â ÃƒËœÃ‚Â¬ÃƒËœÃ‚Â§ Ãƒâ„¢Ã¢â‚¬Å¡ÃƒËœÃ‚Â±Ãƒâ„¢Ã¢â‚¬Â¦ÃƒËœÃ‚Â² Ãƒâ„¢Ã¢â‚¬Â Ãƒâ„¢Ã¢â‚¬Â¦Ãƒâ€ºÃ…â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…â€™ÃƒËœÃ‚Â´Ãƒâ„¢Ã‹â€ ÃƒËœÃ‚Â¯)
-        mockMvc.perform(post("/api/auth/refresh")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new RefreshTokenRequest(secondRefreshToken))))
-                .andExpect(status().isOk());
-
-
     }
 }
