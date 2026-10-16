@@ -42,7 +42,8 @@ public class SecurityConfig {
                     "/error",
                     "/h2-console/**",
                     "/actuator/health",
-                    "/actuator/info"
+                    "/actuator/info",
+                    "/actuator/prometheus"
                 ).permitAll()
 
                 // 2. حفاظت اندپوینت‌های حساس Actuator
