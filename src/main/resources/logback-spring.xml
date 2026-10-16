@@ -1,43 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="user-service"/>
+    <!-- Use console for output -->
+    <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- Include MDC info for TraceID later -->
+            <includeMdc>true</includeMdc>
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <level>level</level>
+                <thread>thread</thread>
+                <logger>logger</logger>
+                <message>message</message>
+            </fieldNames>
+        </encoder>
+    </appender>
 
-    <!-- 1. Profile: default & dev (Console Human-Readable with GDPR Masking) -->
-    <springProfile name="default | dev">
-        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [traceId=%X{traceId:-}, spanId=%X{spanId:-}] - %replace(%replace(%msg){'(?i)(password|token|secret)\s*[:=]\s*\S+','$1=***PROTECTED***'}){'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}','***@GDPR-MASKED***'}%n</pattern>
-            </encoder>
-        </appender>
-        <root level="INFO">
-            <appender-ref ref="CONSOLE"/>
-        </root>
-    </springProfile>
+    <!-- Set root logging to JSON_CONSOLE -->
+    <root level="INFO">
+        <appender-ref ref="JSON_CONSOLE" />
+    </root>
 
-    <!-- 2. Profile: docker & prod (Structured JSON Logging with GDPR Masking) -->
-    <springProfile name="docker | prod">
-        <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                <customFields>{"service":"${APP_NAME}"}</customFields>
-
-                <!-- Include MDC context for traceId / spanId correlation -->
-                <includeMdcKeyName>traceId</includeMdcKeyName>
-                <includeMdcKeyName>spanId</includeMdcKeyName>
-
-                <!-- Masking via standard MaskingJsonGeneratorDecorator -->
-                <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
-                    <defaultMask>***@GDPR-MASKED***</defaultMask>
-                    <patterns>
-                        <!-- Email pattern -->
-                        <pattern>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}</pattern>
-                        <!-- Credit cards (13-16 digits) -->
-                        <pattern>\b(?:\d[ -]*?){13,16}\b</pattern>
-                    </patterns>
-                </jsonGeneratorDecorator>
-            </encoder>
-        </appender>
-        <root level="INFO">
-            <appender-ref ref="JSON_CONSOLE"/>
-        </root>
-    </springProfile>
+    <!-- Configure specific loggers -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="com.example.demo" level="DEBUG"/>
 </configuration>
