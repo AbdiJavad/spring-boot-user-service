@@ -1,4 +1,3 @@
--- Initial database schema setup for Dockerized environment
 CREATE TABLE IF NOT EXISTS shedlock (
     name VARCHAR(64) NOT NULL,
     lock_until TIMESTAMP NOT NULL,
