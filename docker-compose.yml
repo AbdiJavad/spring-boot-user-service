@@ -1,4 +1,4 @@
-﻿services:
+services:
   postgres:
     image: postgres:16-alpine
     container_name: postgres-db
@@ -12,7 +12,7 @@
       - postgres_data:/var/lib/postgresql/data
       - ./docker/init-db.sql:/docker-entrypoint-initdb.d/10-shedlock.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,10 +34,16 @@
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info,prometheus,metrics
-      MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED: "true"
+      MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED: "true"
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9090/actuator/health | grep -q '\"status\"' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
     networks:
       - backend-net
       - monitoring
@@ -51,6 +57,9 @@
       - prometheus_data:/prometheus
     ports:
       - "127.0.0.1:9091:9090"
+    depends_on:
+      app:
+        condition: service_healthy
     networks:
       - monitoring
     restart: unless-stopped
@@ -61,10 +70,14 @@
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?Set GRAFANA_ADMIN_USER in .env}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
     ports:
       - "127.0.0.1:3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
     networks:
       - monitoring
     restart: unless-stopped
