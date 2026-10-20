@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.RefreshTokenResult;
+import com.example.demo.exception.InvalidRefreshTokenException;
 import com.example.demo.model.RefreshToken;
 import com.example.demo.model.User;
 import com.example.demo.repository.RefreshTokenRepository;
@@ -8,35 +10,51 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import com.example.demo.exception.InvalidRefreshTokenException;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Value("${app.security.refresh-token-validity-seconds:604800}")
     private long refreshTokenValiditySeconds;
 
     @Transactional
-    public RefreshToken createRefreshToken(User user) {
+    public RefreshTokenResult createRefreshToken(User user) {
+        return createRefreshTokenWithFamily(user, null);
+    }
+
+    @Transactional
+    public RefreshTokenResult createRefreshTokenWithFamily(User user, String familyId) {
+        String rawToken = generateSecureToken();
+        String tokenHash = hashToken(rawToken);
+        String resolvedFamilyId = (familyId != null && !familyId.isBlank()) ? familyId : UUID.randomUUID().toString();
+
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
-                .token(generateSecureToken())
+                .tokenHash(tokenHash)
                 .expiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds))
                 .revoked(false)
+                .familyId(resolvedFamilyId)
                 .build();
 
-        return refreshTokenRepository.save(refreshToken);
+        RefreshToken saved = refreshTokenRepository.save(refreshToken);
+        return new RefreshTokenResult(saved, rawToken);
     }
 
     @Transactional(readOnly = true)
-    public RefreshToken validateRefreshToken(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+    public RefreshToken validateRefreshToken(String rawToken) {
+        String tokenHash = hashToken(rawToken);
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(() -> new InvalidRefreshTokenException("Invalid refresh token"));
 
         if (refreshToken.isRevoked()) {
@@ -48,52 +66,75 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
-    /**
-     * Rotates a refresh token according to OAuth 2.0 Security BCP (RFC 9700, sect. 4.14.2):
-     * the old token row is preserved and marked as revoked (enabling reuse/theft detection),
-     * and a brand-new token row is issued for the same user.
-     */
     @Transactional
-    public RefreshToken rotate(String token) {
-        // 1. Look up the current (non-revoked) token together with its user
-        RefreshToken oldToken = refreshTokenRepository.findByToken(token)
+    public RefreshTokenResult rotate(String rawToken) {
+        String tokenHash = hashToken(rawToken);
+        RefreshToken oldToken = refreshTokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(() -> new InvalidRefreshTokenException("Refresh token not found"));
 
-        // 2. Validate current state
         if (oldToken.isRevoked()) {
-            // Reuse of a revoked token indicates possible theft; revoke the whole family later.
-            throw new InvalidRefreshTokenException("Refresh token has been revoked (possible reuse detected)");
+            // Token Reuse / Theft Detection: Revoke entire token family!
+            refreshTokenRepository.revokeTokenFamily(oldToken.getFamilyId());
+            throw new InvalidRefreshTokenException("Token reuse detected! Entire token family has been revoked.");
         }
+
         if (oldToken.getExpiryDate().isBefore(Instant.now())) {
+            oldToken.setRevoked(true);
+            refreshTokenRepository.save(oldToken);
             throw new InvalidRefreshTokenException("Refresh token has expired");
         }
 
-        // 3. Revoke the old token row (kept in DB for reuse detection / audit)
+        // Mark old token as revoked
         oldToken.setRevoked(true);
+
+        // Generate new token in the same family
+        String newRawToken = generateSecureToken();
+        String newTokenHash = hashToken(newRawToken);
+        oldToken.setReplacedByToken(newTokenHash);
         refreshTokenRepository.save(oldToken);
 
-        // 4. Issue a brand-new token row for the same user
         RefreshToken newToken = RefreshToken.builder()
                 .user(oldToken.getUser())
-                .token(generateSecureToken())
+                .tokenHash(newTokenHash)
                 .expiryDate(Instant.now().plusSeconds(refreshTokenValiditySeconds))
                 .revoked(false)
+                .familyId(oldToken.getFamilyId())
                 .build();
 
-        return refreshTokenRepository.save(newToken);
+        RefreshToken saved = refreshTokenRepository.save(newToken);
+        return new RefreshTokenResult(saved, newRawToken);
     }
 
     @Transactional
-    public void revoke(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+    public void revoke(String rawToken) {
+        String tokenHash = hashToken(rawToken);
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(() -> new InvalidRefreshTokenException("Refresh token not found"));
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
     }
 
+    public String hashToken(String rawToken) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedhash = digest.digest(rawToken.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder(2 * encodedhash.length);
+            for (byte b : encodedhash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not found", e);
+        }
+    }
+
     private String generateSecureToken() {
         byte[] randomBytes = new byte[32];
-        new SecureRandom().nextBytes(randomBytes);
+        secureRandom.nextBytes(randomBytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 }
