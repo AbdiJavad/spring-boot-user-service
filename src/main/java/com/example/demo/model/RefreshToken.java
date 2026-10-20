@@ -19,15 +19,19 @@ public class RefreshToken {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String token;
+    private String tokenHash;
+
+    @Column(nullable = false)
+    private String familyId;
+
+    @Column(nullable = false)
+    private boolean revoked = false;
+
+    private String replacedByToken;
 
     @Column(nullable = false)
     private Instant expiryDate;
 
-    @Column(nullable = false)
-    private boolean revoked;
-
-    // ÃƒËœÃ‚Â±ÃƒËœÃ‚Â§ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â·Ãƒâ„¢Ã¢â‚¬Â¡ Many-to-One ÃƒËœÃ‚Â¨ÃƒËœÃ‚Â§ User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
