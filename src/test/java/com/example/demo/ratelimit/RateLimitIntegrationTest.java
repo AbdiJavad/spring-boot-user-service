@@ -1,5 +1,7 @@
 package com.example.demo.ratelimit;
 
+
+import com.example.demo.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "rate-limiter.capacity=3",
         "rate-limiter.duration-minutes=1"
 })
-class RateLimitIntegrationTest {
+class RateLimitIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

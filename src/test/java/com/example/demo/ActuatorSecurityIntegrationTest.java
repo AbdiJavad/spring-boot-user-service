@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = DemoApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = "management.endpoints.web.exposure.include=health,info,metrics")
-class ActuatorSecurityIntegrationTest {
+class ActuatorSecurityIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

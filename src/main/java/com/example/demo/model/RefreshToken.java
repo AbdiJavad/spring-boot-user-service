@@ -24,6 +24,7 @@ public class RefreshToken {
     @Column(nullable = false)
     private String familyId;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean revoked = false;
 
@@ -31,6 +32,10 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private Instant expiryDate;
+
+    @Builder.Default
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
