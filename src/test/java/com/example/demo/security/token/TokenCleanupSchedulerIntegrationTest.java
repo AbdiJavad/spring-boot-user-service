@@ -1,5 +1,7 @@
 package com.example.demo.security.token;
 
+
+import com.example.demo.AbstractIntegrationTest;
 import com.example.demo.DemoApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = DemoApplication.class)
 @Transactional
-class TokenCleanupSchedulerIntegrationTest {
+class TokenCleanupSchedulerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private TokenCleanupScheduler tokenCleanupScheduler;

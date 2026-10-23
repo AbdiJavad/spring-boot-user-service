@@ -1,5 +1,7 @@
 package com.example.demo.client;
 
+
+import com.example.demo.AbstractIntegrationTest;
 import com.example.demo.client.dto.ExchangeRateResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -26,7 +28,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @SpringBootTest
 @ActiveProfiles("test")
-class EuroFxRateClientIntegrationTest {
+class EuroFxRateClientIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private EuroFxRateClient euroFxRateClient;

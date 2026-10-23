@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class SecurityIntegrationTest {
+public class SecurityIntegrationTest extends AbstractIntegrationTest {
 
     private MockMvc mockMvc;
 
