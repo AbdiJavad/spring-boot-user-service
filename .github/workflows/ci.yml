@@ -13,7 +13,7 @@ jobs:
     services:
       postgres:
         image: postgres:16-alpine
-        environment:
+        env:
           POSTGRES_DB: demo_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
