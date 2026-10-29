@@ -3,6 +3,7 @@ package com.example.demo.security.token;
 import java.time.Duration;
 import java.time.Instant;
 
+import com.example.demo.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,27 +18,33 @@ import org.springframework.transaction.annotation.Transactional;
 public class TokenCleanupScheduler {
 
     private final RevokedTokenRepository revokedTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     /**
-     * Cleanup expired revoked tokens to prevent table and index bloat.
+     * Cleanup expired access tokens (revoked_tokens) and expired refresh tokens (refresh_tokens).
      * Protected by ShedLock for Kubernetes/multi-replica production environments.
      */
     @Transactional
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "${app.security.token-cleanup-cron:0 0 3 * * *}")
     @SchedulerLock(
-        name = "TokenCleanupScheduler_cleanupExpiredRevokedTokens",
+        name = "TokenCleanupScheduler_cleanupExpiredTokens",
         lockAtLeastFor = "15s",
         lockAtMostFor = "5m"
     )
-    public void cleanupExpiredRevokedTokens() {
+    public void cleanupExpiredTokens() {
+        Instant now = Instant.now();
         Instant start = Instant.now();
-        long deleted = revokedTokenRepository.deleteByExpiryAtBefore(start);
+
+        int deletedRevoked = revokedTokenRepository.deleteByExpiryAtBefore(now);
+        int deletedRefresh = refreshTokenRepository.deleteByExpiryDateBefore(now);
+
         Duration took = Duration.between(start, Instant.now());
 
-        if (deleted > 0) {
-            log.info("Token cleanup: deleted {} expired revoked tokens in {} ms", deleted, took.toMillis());
+        if (deletedRevoked > 0 || deletedRefresh > 0) {
+            log.info("Token cleanup completed in {} ms: deleted {} revoked access tokens, {} expired refresh tokens",
+                    took.toMillis(), deletedRevoked, deletedRefresh);
         } else {
-            log.debug("Token cleanup: no expired revoked tokens to delete ({} ms)", took.toMillis());
+            log.debug("Token cleanup completed in {} ms: no expired tokens to delete", took.toMillis());
         }
     }
 }

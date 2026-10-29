@@ -20,6 +20,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     void revokeTokenFamily(@Param("familyId") String familyId);
 
     @Modifying
-    @Query("DELETE FROM RefreshToken r WHERE r.expiryDate < :now OR r.revoked = true")
-    void deleteExpiredOrRevokedTokens(@Param("now") Instant now);
+    @Query("DELETE FROM RefreshToken r WHERE r.expiryDate < :cutoff")
+    int deleteByExpiryDateBefore(@Param("cutoff") Instant cutoff);
 }
