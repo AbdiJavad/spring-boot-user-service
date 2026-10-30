@@ -5,7 +5,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-demo_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
-    # پورت Postgres روی هاست منتشر نمی‌شود تا امنیت داده و ایزولاسیون کامل تضمین گردد
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/init-db.sql:/docker-entrypoint-initdb.d/10-shedlock.sql:ro
