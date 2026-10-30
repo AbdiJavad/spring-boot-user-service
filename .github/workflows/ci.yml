@@ -1,10 +1,10 @@
-name: CI/CD Pipeline
+name: Enterprise CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main", "master", "feature/*" ]
+    branches: [ main, "feature/**" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: demo_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_DB: demo_db
+          POSTGRES_USER: sa
+          POSTGRES_PASSWORD: secretpassword
         ports:
           - 5432:5432
         options: >-
@@ -26,22 +26,18 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'corretto'
+          java-version: '17'
           cache: 'maven'
 
       - name: Grant execute permission for Maven wrapper
         run: chmod +x mvnw
 
-      - name: Run Unit and Integration Tests
-        run: ./mvnw clean verify
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/demo_test
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: password
+      - name: Run Compile & Tests with Maven
+        run: ./mvnw clean verify -Dspring.datasource.url=jdbc:postgresql://localhost:5432/demo_db -Dspring.datasource.username=sa -Dspring.datasource.password=secretpassword
