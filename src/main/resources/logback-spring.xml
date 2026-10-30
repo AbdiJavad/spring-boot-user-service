@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- Use console for output -->
+    <!-- Use console for output with Logstash JSON Encoder -->
     <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- Include MDC info for TraceID later -->
+            <!-- Include MDC info for TraceID and SpanID from Micrometer Tracing -->
+            <includeMdcKeyName>traceId</includeMdcKeyName>
+            <includeMdcKeyName>spanId</includeMdcKeyName>
             <includeMdc>true</includeMdc>
             <fieldNames>
                 <timestamp>timestamp</timestamp>
@@ -12,6 +14,8 @@
                 <logger>logger</logger>
                 <message>message</message>
             </fieldNames>
+            <!-- Enterprise metadata for Grafana Loki -->
+            <customFields>{"app":"demo-service","env":"production"}</customFields>
         </encoder>
     </appender>
 
