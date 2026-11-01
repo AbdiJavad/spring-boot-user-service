@@ -8,7 +8,7 @@ RUN apk add --no-cache curl wget bash
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-# کپی فایل جار از قبل کامپایل شده
+# کپی فایل جار از مسیر target روی میزبان
 COPY target/*.jar app.jar
 
 EXPOSE 9090
