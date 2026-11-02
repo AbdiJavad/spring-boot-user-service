@@ -1,43 +1,34 @@
-name: Enterprise CI/CD Pipeline
+name: Continuous Integration
 
 on:
   push:
-    branches: [ main, "feature/**" ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build-and-test:
+    name: Build & Verify (Java 17 / Testcontainers)
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: demo_db
-          POSTGRES_USER: sa
-          POSTGRES_PASSWORD: secretpassword
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 17 (Eclipse Temurin)
         uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
           java-version: '17'
+          distribution: 'temurin'
           cache: 'maven'
 
-      - name: Grant execute permission for Maven wrapper
+      - name: Make Maven Wrapper Executable
         run: chmod +x mvnw
 
-      - name: Run Compile & Tests with Maven
-        run: ./mvnw clean verify -Dspring.datasource.url=jdbc:postgresql://localhost:5432/demo_db -Dspring.datasource.username=sa -Dspring.datasource.password=secretpassword
+      - name: Run Build, Unit & Integration Tests
+        run: ./mvnw clean verify -B --no-transfer-progress
+        env:
+          SPRING_PROFILES_ACTIVE: test
