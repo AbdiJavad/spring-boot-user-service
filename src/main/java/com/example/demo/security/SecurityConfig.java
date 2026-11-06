@@ -1,6 +1,7 @@
 package com.example.demo.security;
 
 import com.example.demo.ratelimit.RateLimitFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,13 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
+    public FilterRegistrationBean<RateLimitFilter> rateLimitFilterRegistration(RateLimitFilter filter) {
+        FilterRegistrationBean<RateLimitFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
@@ -42,7 +50,12 @@ public class SecurityConfig {
                     "/error",
                     "/h2-console/**",
                     "/actuator/health",
-                    "/actuator/info"
+                    "/actuator/info",
+                    "/actuator/prometheus",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/webjars/**"
                 ).permitAll()
 
                 // 2. حفاظت اندپوینت‌های حساس Actuator
