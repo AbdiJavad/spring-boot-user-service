@@ -4,19 +4,26 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 
 @Service
 public class RateLimitService {
 
     private final Cache<String, Bucket> cache;
+    private final long capacity;
+    private final Duration refillDuration;
 
-    public RateLimitService() {
+    public RateLimitService(
+            @Value("${rate-limiter.capacity:10}") long capacity,
+            @Value("${rate-limiter.duration-minutes:1}") long durationMinutes) {
+        this.capacity = capacity;
+        this.refillDuration = Duration.ofMinutes(durationMinutes);
         this.cache = Caffeine.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(10))
-                .maximumSize(1000)
+                .maximumSize(10_000)
                 .build();
     }
 
@@ -25,8 +32,13 @@ public class RateLimitService {
     }
 
     private Bucket createNewBucket(String key) {
+        Bandwidth limit = Bandwidth.builder()
+                .capacity(capacity)
+                .refillGreedy(capacity, refillDuration)
+                .build();
+
         return Bucket.builder()
-                .addLimit(Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1))))
+                .addLimit(limit)
                 .build();
     }
 }

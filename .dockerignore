@@ -1,8 +1,6 @@
-**/.git
-**/.gitignore
-**/.idea
-**/.vscode
-target/*
-!target/*.jar
-node_modules
-.mvn
+.git/
+.github/
+*.log
+*.iml
+.idea/
+.vscode/

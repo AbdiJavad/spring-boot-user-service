@@ -39,7 +39,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+
         String clientIp = request.getRemoteAddr();
+
         Bucket bucket = rateLimitService.resolveBucket(clientIp);
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
@@ -47,6 +49,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setHeader("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
             filterChain.doFilter(request, response);
         } else {
+
             long nanosToWait = probe.getNanosToWaitForRefill();
             long waitForRefillSeconds = Math.max(
                     1L,
@@ -57,6 +60,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setHeader("X-Rate-Limit-Retry-After-Seconds", String.valueOf(waitForRefillSeconds));
             response.setHeader("Retry-After", String.valueOf(waitForRefillSeconds));
+
             response.getWriter().write(String.format(
                     "{\"status\":429,\"error\":\"Too Many Requests\",\"message\":\"Try again in %d seconds.\"}",
                     waitForRefillSeconds

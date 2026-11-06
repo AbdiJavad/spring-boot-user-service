@@ -38,3 +38,4 @@ diagnose.ps1
 analyze-and-build.sh
 .env
 docker-data/
+.env
