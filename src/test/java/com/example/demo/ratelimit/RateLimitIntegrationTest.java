@@ -85,7 +85,6 @@ class RateLimitIntegrationTest extends AbstractIntegrationTest {
         mockMvc.perform(post("/api/auth/login")
 
                         .with(request -> { request.setRemoteAddr(ipBlocked); return request; })
-in
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"test@test.com\",\"password\":\"pass\"}"))
                 .andExpect(status().isTooManyRequests());
