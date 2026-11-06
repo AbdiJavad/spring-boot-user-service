@@ -39,7 +39,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String clientIp = resolveClientIp(request);
+
+        String clientIp = request.getRemoteAddr();
+
         Bucket bucket = rateLimitService.resolveBucket(clientIp);
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
@@ -47,10 +49,18 @@ public class RateLimitFilter extends OncePerRequestFilter {
             response.setHeader("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
             filterChain.doFilter(request, response);
         } else {
-            long waitForRefillSeconds = probe.getNanosToWaitForRefill() / 1_000_000_000L;
+
+            long nanosToWait = probe.getNanosToWaitForRefill();
+            long waitForRefillSeconds = Math.max(
+                    1L,
+                    nanosToWait / 1_000_000_000L
+                            + (nanosToWait % 1_000_000_000L == 0 ? 0 : 1)
+            );
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setHeader("X-Rate-Limit-Retry-After-Seconds", String.valueOf(waitForRefillSeconds));
+            response.setHeader("Retry-After", String.valueOf(waitForRefillSeconds));
+
             response.getWriter().write(String.format(
                     "{\"status\":429,\"error\":\"Too Many Requests\",\"message\":\"Try again in %d seconds.\"}",
                     waitForRefillSeconds
@@ -58,11 +68,4 @@ public class RateLimitFilter extends OncePerRequestFilter {
         }
     }
 
-    private String resolveClientIp(HttpServletRequest request) {
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isBlank()) {
-            return xForwardedFor.split(",")[0].trim();
-        }
-        return request.getRemoteAddr();
-    }
 }

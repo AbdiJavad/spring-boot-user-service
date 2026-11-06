@@ -40,19 +40,26 @@ class RateLimitIntegrationTest extends AbstractIntegrationTest {
         // ارسال ۳ درخواست اول (باید مجاز باشند و از فیلتر عبور کنند)
         for (int i = 1; i <= 3; i++) {
             mockMvc.perform(post("/api/auth/login")
-                            .header("X-Forwarded-For", testIp)
+
+                            .with(request -> { request.setRemoteAddr(testIp); return request; })
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"email\":\"invalid@test.com\",\"password\":\"wrong\"}"))
-                    .andExpect(header().exists("X-Rate-Limit-Remaining"));
+                    .andExpect(header().string("X-Rate-Limit-Remaining", Integer.toString(3 - i)));
+
         }
 
         // درخواست چهارم باید با 429 مسدود شود
         mockMvc.perform(post("/api/auth/login")
-                        .header("X-Forwarded-For", testIp)
+
+                        .with(request -> { request.setRemoteAddr(testIp); return request; })
+
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"invalid@test.com\",\"password\":\"wrong\"}"))
                 .andExpect(status().isTooManyRequests())
                 .andExpect(header().exists("X-Rate-Limit-Retry-After-Seconds"))
+
+                .andExpect(header().exists("Retry-After"))
+
                 .andExpect(jsonPath("$.status").value(429))
                 .andExpect(jsonPath("$.error").value("Too Many Requests"))
                 .andExpect(jsonPath("$.message", containsString("Try again in")));
@@ -67,27 +74,56 @@ class RateLimitIntegrationTest extends AbstractIntegrationTest {
         // مصرف تمام ظرفیت IP اول
         for (int i = 1; i <= 3; i++) {
             mockMvc.perform(post("/api/auth/login")
-                            .header("X-Forwarded-For", ipBlocked)
+
+                            .with(request -> { request.setRemoteAddr(ipBlocked); return request; })
+
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"email\":\"test@test.com\",\"password\":\"pass\"}"));
         }
 
         // IP اول اکنون مسدود است
         mockMvc.perform(post("/api/auth/login")
-                        .header("X-Forwarded-For", ipBlocked)
+
+                        .with(request -> { request.setRemoteAddr(ipBlocked); return request; })
+in
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"test@test.com\",\"password\":\"pass\"}"))
                 .andExpect(status().isTooManyRequests());
 
         // اما IP دوم هنوز باید ظرفیت داشته باشد و مسدود نشود
         mockMvc.perform(post("/api/auth/login")
-                        .header("X-Forwarded-For", ipAllowed)
+
+                        .with(request -> { request.setRemoteAddr(ipAllowed); return request; })
+
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"test@test.com\",\"password\":\"pass\"}"))
                 .andExpect(header().string("X-Rate-Limit-Remaining", "2"));
     }
 
     @Test
+
+    @DisplayName("Spoofed forwarded IP must not bypass the rate limit")
+    void shouldIgnoreUntrustedForwardedForHeader() throws Exception {
+        for (int i = 0; i < 3; i++) {
+            mockMvc.perform(post("/api/auth/login")
+                            .with(request -> { request.setRemoteAddr("203.0.113.42"); return request; })
+                            .header("X-Forwarded-For", "198.51.100." + i)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"email\":\"invalid@test.com\",\"password\":\"wrong\"}"))
+                    .andExpect(header().string("X-Rate-Limit-Remaining", Integer.toString(2 - i)));
+        }
+
+        mockMvc.perform(post("/api/auth/login")
+                        .with(request -> { request.setRemoteAddr("203.0.113.42"); return request; })
+                        .header("X-Forwarded-For", "198.51.100.99")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"invalid@test.com\",\"password\":\"wrong\"}"))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(header().exists("Retry-After"));
+    }
+
+    @Test
+
     @DisplayName("Should not rate limit whitelisted endpoints like Actuator health")
     void shouldBypassRateLimitForWhitelistedEndpoints() throws Exception {
         String testIp = "172.16.0.50";
@@ -95,7 +131,9 @@ class RateLimitIntegrationTest extends AbstractIntegrationTest {
         // حتی اگر بیش از ظرفیت به /actuator/health ریکوئست بزنیم، نباید مسدود شود
         for (int i = 0; i < 5; i++) {
             mockMvc.perform(get("/actuator/health")
-                            .header("X-Forwarded-For", testIp))
+
+                            .with(request -> { request.setRemoteAddr(testIp); return request; }))
+
                     .andExpect(status().isOk());
         }
     }
