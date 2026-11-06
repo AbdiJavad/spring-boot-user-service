@@ -25,6 +25,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: "9090"
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: http://jaeger:4318/v1/traces
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "0.1"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-demo_db}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
@@ -46,7 +48,7 @@ services:
   prometheus:
     image: prom/prometheus:v3.1.0
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     ports:
       - "127.0.0.1:9091:9090"
