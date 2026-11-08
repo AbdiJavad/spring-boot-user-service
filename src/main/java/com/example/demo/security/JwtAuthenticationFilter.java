@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-import com.example.demo.security.token.TokenRevocationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,16 +20,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRevocationService tokenRevocationService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
             UserDetailsService userDetailsService,
-            TokenRevocationService tokenRevocationService
+            TokenBlacklistService tokenBlacklistService
     ) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.tokenRevocationService = tokenRevocationService;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Override
@@ -52,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String jti = jwtService.extractJti(jwt);
-            if (jti != null && tokenRevocationService.isRevoked(jti)) {
+            if (jti != null && tokenBlacklistService.isBlacklisted(jti)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -72,7 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            // Ã˜Â¯Ã˜Â± Ã˜ÂµÃ™Ë†Ã˜Â±Ã˜Âª Ã˜Â¨Ã˜Â±Ã™Ë†Ã˜Â² Ã˜Â®Ã˜Â·Ã˜Â§ Ã˜Â¯Ã˜Â± Ã˜ÂªÃ˜Â¬Ã˜Â²Ã›Å’Ã™â€¡ Ã˜ÂªÃ™Ë†ÃšÂ©Ã™â€  ÃšÂ©Ã˜Â§Ã™â€ Ã˜ÂªÃšÂ©Ã˜Â³Ã˜Âª Ã˜Â®Ã˜Â§Ã™â€žÃ›Å’ Ã™â€¦Ã›Å’Ã™â€¦Ã˜Â§Ã™â€ Ã˜Â¯ Ã™Ë† AuthenticationEntryPoint Ã™Ë†Ã˜Â§ÃšÂ©Ã™â€ Ã˜Â´ Ã™â€ Ã˜Â´Ã˜Â§Ã™â€  Ã™â€¦Ã›Å’Ã˜Â¯Ã™â€¡Ã˜Â¯
+            // Context stays empty in case of parse error; AuthenticationEntryPoint handles 401
         }
 
         filterChain.doFilter(request, response);
