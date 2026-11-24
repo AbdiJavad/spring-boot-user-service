@@ -6,96 +6,113 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/10-shedlock.sql:ro
+    - postgres_data:/var/lib/postgresql/data
+    - ./docker/init-db.sql:/docker-entrypoint-initdb.d/10-shedlock.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      test:
+      - CMD-SHELL
+      - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
     networks:
-      - backend-net
+    - backend-net
     restart: unless-stopped
-
   app:
     build: .
     ports:
-      - "127.0.0.1:9090:9090"
+    - 127.0.0.1:9090:9090
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SERVER_PORT: "9090"
+      SERVER_PORT: '9090'
       MANAGEMENT_OTLP_TRACING_ENDPOINT: http://jaeger:4318/v1/traces
-      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "0.1"
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: '0.1'
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-demo_db}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: '6379'
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:9090/actuator/health || exit 1" ]
+      test:
+      - CMD-SHELL
+      - wget --no-verbose --tries=1 --spider http://127.0.0.1:9090/actuator/health
+        || exit 1
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 120s
     networks:
-      - backend-net
-      - monitoring
+    - backend-net
+    - monitoring
     restart: unless-stopped
-
   prometheus:
     image: prom/prometheus:v3.1.0
     volumes:
-      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
+    - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - prometheus_data:/prometheus
     ports:
-      - "127.0.0.1:9091:9090"
+    - 127.0.0.1:9091:9090
     depends_on:
       app:
         condition: service_healthy
     networks:
-      - monitoring
+    - monitoring
     restart: unless-stopped
-
   grafana:
     image: grafana/grafana:11.4.0
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?Set GRAFANA_ADMIN_USER in .env}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in .env}
-      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD
+        in .env}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
     ports:
-      - "127.0.0.1:3000:3000"
+    - 127.0.0.1:3000:3000
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+    - grafana_data:/var/lib/grafana
+    - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    - ./grafana/dashboards:/etc/grafana/dashboards:ro
     depends_on:
-      - prometheus
+    - prometheus
     networks:
-      - monitoring
+    - monitoring
     restart: unless-stopped
-
   jaeger:
     image: jaegertracing/all-in-one:1.60
     environment:
-      - COLLECTOR_OTLP_ENABLED=true
+    - COLLECTOR_OTLP_ENABLED=true
     ports:
-      - "127.0.0.1:16686:16686"
-      - "127.0.0.1:4317:4317"
-      - "127.0.0.1:4318:4318"
+    - 127.0.0.1:16686:16686
+    - 127.0.0.1:4317:4317
+    - 127.0.0.1:4318:4318
     networks:
-      - monitoring
+    - monitoring
     restart: unless-stopped
-
+  redis:
+    image: redis:7-alpine
+    networks:
+    - backend-net
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - ping
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
 networks:
   backend-net:
     driver: bridge
   monitoring:
     driver: bridge
-
 volumes:
-  postgres_data:
-  prometheus_data:
-  grafana_data:
+  postgres_data: null
+  prometheus_data: null
+  grafana_data: null
