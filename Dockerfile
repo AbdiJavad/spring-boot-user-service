@@ -1,16 +1,20 @@
-FROM maven:3.9-eclipse-temurin-17-alpine AS build
+# ==========================================
+# Build Stage (Java 21)
+# ==========================================
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /workspace
 
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 COPY src/ src/
 
-RUN sh ./mvnw -B -DskipTests package \
-    && cp target/*.jar application.jar \
-    && java -Djarmode=tools -jar application.jar \
-         extract --layers --destination /workspace/extracted
+RUN ./mvnw -B -DskipTests package \
+    && java -Djarmode=layertools -jar target/*.jar extract --destination /workspace/extracted
 
-FROM eclipse-temurin:17-jre-alpine
+# ==========================================
+# Runtime Stage (Java 21 JRE Alpine)
+# ==========================================
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 RUN apk add --no-cache wget \
@@ -24,4 +28,5 @@ COPY --from=build --chown=spring:spring /workspace/extracted/application/ ./
 
 USER spring:spring
 EXPOSE 9090
-ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:MaxRAMPercentage=75.0", "-jar", "application.jar"]
+
+ENTRYPOINT ["java", "-XX:+UseG1GC", "-XX:MaxRAMPercentage=75.0", "org.springframework.boot.loader.launch.JarLauncher"]
