@@ -21,30 +21,53 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MeterRegistry meterRegistry;
-    private final Counter userRegistrationCounter;
+    private final Counter registrationSuccessCounter;
+    private final Counter registrationFailureCounter;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, MeterRegistry meterRegistry) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.meterRegistry = meterRegistry;
-        this.userRegistrationCounter = meterRegistry != null ? meterRegistry.counter("user.registration.count") : null;
+        if (meterRegistry != null) {
+            this.registrationSuccessCounter = Counter.builder("user.registration.total")
+                    .tag("status", "success")
+                    .description("Total number of successful user registrations")
+                    .register(meterRegistry);
+            this.registrationFailureCounter = Counter.builder("user.registration.total")
+                    .tag("status", "failure")
+                    .description("Total number of failed user registrations")
+                    .register(meterRegistry);
+        } else {
+            this.registrationSuccessCounter = null;
+            this.registrationFailureCounter = null;
+        }
     }
 
     public UserDTO registerUser(UserRegistrationDto dto) {
-        if (userRepository.existsByEmail(dto.email())) {
-            throw new EmailAlreadyExistsException("Email already in use: " + dto.email());
-        }
-        if (userRegistrationCounter != null) {
-            userRegistrationCounter.increment();
-        }
-        User user = new User();
-        user.setName(dto.name());
-        user.setEmail(dto.email());
-        user.setPassword(passwordEncoder.encode(dto.password()));
-        user.setRole(dto.role() != null ? dto.role() : Role.ROLE_USER);
+        try {
+            if (userRepository.existsByEmail(dto.email())) {
+                throw new EmailAlreadyExistsException("Email already in use: " + dto.email());
+            }
 
-        User savedUser = userRepository.save(user);
-        return mapToDTO(savedUser);
+            User user = new User();
+            user.setName(dto.name());
+            user.setEmail(dto.email());
+            user.setPassword(passwordEncoder.encode(dto.password()));
+            user.setRole(dto.role() != null ? dto.role() : Role.ROLE_USER);
+
+            User savedUser = userRepository.save(user);
+
+            if (registrationSuccessCounter != null) {
+                registrationSuccessCounter.increment();
+            }
+
+            return mapToDTO(savedUser);
+        } catch (Exception e) {
+            if (registrationFailureCounter != null) {
+                registrationFailureCounter.increment();
+            }
+            throw e;
+        }
     }
 
     public List<UserDTO> getAllUsers() {

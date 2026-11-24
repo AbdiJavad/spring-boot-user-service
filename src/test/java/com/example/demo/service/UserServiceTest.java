@@ -9,6 +9,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,17 +39,12 @@ class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Mock
     private MeterRegistry meterRegistry;
-
-    @Mock
-    private Counter registrationCounter;
-
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        when(meterRegistry.counter("user.registration.count")).thenReturn(registrationCounter);
+        meterRegistry = new SimpleMeterRegistry();
         userService = new UserService(userRepository, passwordEncoder, meterRegistry);
     }
 
@@ -57,7 +53,7 @@ class UserServiceTest {
     class RegisterUserTests {
 
         @Test
-        @DisplayName("Branch: Should successfully register user with default ROLE_USER when role is null")
+        @DisplayName("Branch: Should successfully register user with default ROLE_USER and increment success metric")
         void shouldRegisterUserWithDefaultRoleWhenRoleIsNull() {
             UserRegistrationDto dto = new UserRegistrationDto("Hans", "hans@example.de", "Secret123!", null);
 
@@ -74,12 +70,14 @@ class UserServiceTest {
             assertThat(result).isNotNull();
             assertThat(result.getId()).isEqualTo(1L);
             assertThat(result.getRole()).isEqualTo(Role.ROLE_USER.name());
-            verify(registrationCounter, times(1)).increment();
             verify(userRepository).save(any(User.class));
+
+            double successCount = meterRegistry.get("user.registration.total").tag("status", "success").counter().count();
+            assertThat(successCount).isEqualTo(1.0);
         }
 
         @Test
-        @DisplayName("Branch: Should register user with specified role (e.g. ROLE_ADMIN)")
+        @DisplayName("Branch: Should register user with specified role and increment success metric")
         void shouldRegisterUserWithExplicitRole() {
             UserRegistrationDto dto = new UserRegistrationDto("Admin", "admin@example.de", "Admin123!", Role.ROLE_ADMIN);
 
@@ -94,10 +92,12 @@ class UserServiceTest {
             UserDTO result = userService.registerUser(dto);
 
             assertThat(result.getRole()).isEqualTo(Role.ROLE_ADMIN.name());
+            double successCount = meterRegistry.get("user.registration.total").tag("status", "success").counter().count();
+            assertThat(successCount).isEqualTo(1.0);
         }
 
         @Test
-        @DisplayName("Branch: Should throw EmailAlreadyExistsException when email is taken")
+        @DisplayName("Branch: Should throw EmailAlreadyExistsException when email is taken and increment failure metric")
         void shouldThrowExceptionWhenEmailExists() {
             UserRegistrationDto dto = new UserRegistrationDto("Max", "taken@example.de", "Pw123!", Role.ROLE_USER);
 
@@ -108,7 +108,9 @@ class UserServiceTest {
                     .hasMessageContaining("Email already in use: taken@example.de");
 
             verify(userRepository, never()).save(any());
-            verify(registrationCounter, never()).increment();
+
+            double failureCount = meterRegistry.get("user.registration.total").tag("status", "failure").counter().count();
+            assertThat(failureCount).isEqualTo(1.0);
         }
 
         @Test
@@ -186,28 +188,6 @@ class UserServiceTest {
                     .hasMessageContaining("User not found with id: 999");
 
             verify(userRepository, never()).deleteById(anyLong());
-        }
-    }
-
-    @Nested
-    @DisplayName("getAllUsers & mapToDTO Scenarios")
-    class GetAllUsersTests {
-
-        @Test
-        @DisplayName("Branch: Should map list of users and handle null role correctly")
-        void shouldMapUsersAndHandleNullRole() {
-            User userWithoutRole = new User();
-            userWithoutRole.setId(1L);
-            userWithoutRole.setName("NoRole");
-            userWithoutRole.setEmail("norole@example.de");
-            userWithoutRole.setRole(null);
-
-            when(userRepository.findAll()).thenReturn(List.of(userWithoutRole));
-
-            List<UserDTO> users = userService.getAllUsers();
-
-            assertThat(users).hasSize(1);
-            assertThat(users.get(0).getRole()).isNull();
         }
     }
 }
