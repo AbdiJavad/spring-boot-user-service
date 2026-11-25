@@ -42,7 +42,7 @@ services:
     healthcheck:
       test:
       - CMD-SHELL
-      - wget --no-verbose --tries=1 --spider http://127.0.0.1:9090/actuator/health
+      - wget --no-verbose --tries=1 --spider http://127.0.0.1:9090/actuator/health/readiness
         || exit 1
       interval: 10s
       timeout: 5s
