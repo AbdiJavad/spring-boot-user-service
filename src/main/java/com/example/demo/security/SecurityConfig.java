@@ -49,7 +49,7 @@ public class SecurityConfig {
                     "/api/users/register",
                     "/error",
                     "/h2-console/**",
-                    "/actuator/health",
+                    "/actuator/health/**",
                     "/actuator/info",
                     "/actuator/prometheus",
                     "/v3/api-docs/**",
