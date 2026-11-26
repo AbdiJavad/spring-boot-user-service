@@ -1,1 +1,32 @@
-﻿
+name: CI & Test Pipeline
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Maven Clean Test
+        run: ./mvnw clean test
+        env:
+          JWT_SECRET: ci-secret-key-for-jwt-signing-validation-purposes-only
+
+      - name: Validate Docker Compose Config
+        uses: docker/setup-buildx-action@v3
+      - name: Compose Config Check
+        run: docker compose config --quiet
