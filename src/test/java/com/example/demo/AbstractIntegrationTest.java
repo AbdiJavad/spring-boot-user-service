@@ -4,6 +4,7 @@ import com.example.demo.support.RequiresDocker;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -17,7 +18,13 @@ public abstract class AbstractIntegrationTest {
                     .withUsername("testuser")
                     .withPassword("testpass");
 
+    @ServiceConnection
+    protected static final GenericContainer<?> redis =
+            new GenericContainer<>("redis:7-alpine")
+                    .withExposedPorts(6379);
+
     static {
         postgres.start();
+        redis.start();
     }
 }
