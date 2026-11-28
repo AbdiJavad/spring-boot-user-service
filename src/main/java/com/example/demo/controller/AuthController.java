@@ -6,9 +6,12 @@ import com.example.demo.dto.TokenResponse;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtService;
+import com.example.demo.security.TokenBlacklistService;
 import com.example.demo.service.RefreshTokenService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +26,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final TokenBlacklistService tokenBlacklistService;
     private final UserRepository userRepository;
 
     private static final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 900; // 15 minutes
@@ -56,8 +60,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<Void> logout(
+            @Valid @RequestBody RefreshTokenRequest request,
+            HttpServletRequest servletRequest
+    ) {
+        // 1. باطل کردن Refresh Token در دیتابیس
         refreshTokenService.revoke(request.refreshToken());
+
+        // 2. بلک‌لیست کردن Access Token جاری در Redis (Zero Trust Hardening)
+        String authHeader = servletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String accessToken = authHeader.substring(7);
+            tokenBlacklistService.blacklistToken(accessToken);
+        }
+
         return ResponseEntity.noContent().build();
     }
 }
