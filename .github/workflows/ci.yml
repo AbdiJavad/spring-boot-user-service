@@ -21,12 +21,14 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
       - name: Run Maven Clean Test
         run: ./mvnw clean test
         env:
           JWT_SECRET: ci-secret-key-for-jwt-signing-validation-purposes-only
+          TESTCONTAINERS_RYUK_DISABLED: "true"
 
       - name: Validate Docker Compose Config
-        uses: docker/setup-buildx-action@v3
-      - name: Compose Config Check
         run: docker compose config --quiet
